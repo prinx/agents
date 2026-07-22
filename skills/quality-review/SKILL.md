@@ -1,0 +1,8 @@
+---
+name: quality-review
+description: Use when reviewing a ticket diff for correctness, regressions, architecture, security, and maintainability.
+---
+
+# Quality Review
+
+Review the diff against ticket acceptance criteria and project conventions. Prioritize correctness, security, architecture alignment, maintainability, and scope. Write actionable findings with severity and produce only `APPROVE` or `REQUEST CHANGES`.
