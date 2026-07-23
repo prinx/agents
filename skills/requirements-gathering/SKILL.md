@@ -5,4 +5,6 @@ description: Use when a request needs product discovery, scope, acceptance crite
 
 # Requirements Gathering
 
-Read existing requirements, project memory, and user preferences when available. Identify only decisions that materially affect value, scope, risk, or an irreversible choice. Batch concise questions for the orchestrator to relay. Record users, problem, in/out of scope, acceptance criteria, constraints, assumptions, and open decisions in `requirements.md`.
+Read existing requirements, project memory, and user preferences when available. Before finalizing requirements, identify missing facts about the problem, intended users, core outcomes or features, limits or constraints, and success criteria. Ask stack or technology questions only when they materially affect scope or constraints. Ask a short, plain-language batch of only high-value questions for the orchestrator to relay; do not act as though you can speak directly with the human.
+
+Do not turn guesses into requirements. Record assumptions as unresolved items and ask the human to confirm them. If the human says "choose for me" or provides enough information, make a brief recommendation and label it proposed until confirmed. While answers or explicit human approval are missing, create only a draft or questions artifact if needed; do not mark `requirements.md`, `plan.md`, or `backlog.md` approved or ready. After the gate is satisfied, record users, problem, in/out of scope, acceptance criteria, constraints, assumptions, and open decisions in `requirements.md`.

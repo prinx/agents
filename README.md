@@ -90,7 +90,7 @@ Use this fallback in any tool:
 
 > I want to build a link shortener web app. Use the orchestrator to coordinate the work.
 
-For a bigger project, the orchestrator brings in the planner. The planner asks questions and makes a plan. Answer the questions and review the plan. The developer and quality roles then work through one feature at a time.
+For a bigger project, the orchestrator brings in the planner. The planner asks questions before making a plan when key product facts are missing. Answer the questions and review the plan. The developer and quality roles then work through one feature at a time.
 
 ### Add a feature
 
