@@ -7,10 +7,17 @@ TOOL=
 SCOPE=
 TARGET=
 FORCE=false
+COLOR=false
 
-fail() { printf '%s\n' "$1" >&2; exit 1; }
+if [ -t 1 ] && [ -t 2 ] && [ -z "${NO_COLOR+x}" ]; then COLOR=true; fi
+
+color() {
+  if [ "$COLOR" = true ]; then printf '\033[%sm%s\033[0m' "$1" "$2"; else printf '%s' "$2"; fi
+}
+heading() { printf '%s\n' "$(color '1;34' "$1")"; }
+fail() { printf '%s\n' "$(color 31 "$1")" >&2; exit 1; }
 usage() {
-  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|all --scope global|project [--target <directory>] [--force]" >&2
+  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|all --scope global|project [--target <directory>] [--force] [--no-color]" >&2
   printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
 REPORT_DIR=$(mktemp -d "${TMPDIR:-/tmp}/workflow-toolkit-report.XXXXXX") || fail 'Could not create an installation report directory.'
@@ -22,6 +29,7 @@ while [ "$#" -gt 0 ]; do
     --scope) SCOPE=${2:?Missing value for --scope.}; shift 2 ;;
     --target) TARGET=${2:?Missing value for --target.}; shift 2 ;;
     --force|--yes) FORCE=true; shift ;;
+    --no-color) COLOR=false; shift ;;
     --help|-h) usage; exit 0 ;;
     *) fail "Unsupported bundled-installer argument: $1" ;;
   esac
@@ -109,7 +117,7 @@ print_opencode_locations() {
   base=$1
   shared=$2
   instructions=$3
-  printf '%s\n' 'Installed OpenCode workflow files:'
+  heading 'Installed OpenCode workflow files:'
   print_location 'Agents' "$base/agents"
   print_location 'Skills' "$base/skills"
   print_location 'Shared workspace' "$shared"
@@ -121,7 +129,7 @@ print_claude_locations() {
   base=$1
   shared=$2
   instructions=$3
-  printf '%s\n' 'Installed Claude Code workflow files:'
+  heading 'Installed Claude Code workflow files:'
   print_location 'Agents' "$base/agents"
   print_location 'Skills' "$base/skills"
   print_location 'Shared workspace' "$shared"
@@ -133,7 +141,7 @@ print_codex_locations() {
   base=$1
   shared=$2
   instructions=$3
-  printf '%s\n' 'Installed Codex workflow files:'
+  heading 'Installed Codex workflow files:'
   print_location 'Agents' "$base/agents"
   print_location 'Shared workspace' "$shared"
   [ -n "$instructions" ] && print_location 'Instructions' "$instructions"
@@ -144,7 +152,7 @@ print_grok_locations() {
   base=$1
   shared=$2
   instructions=$3
-  printf '%s\n' 'Installed Grok workflow files:'
+  heading 'Installed Grok workflow files:'
   print_location 'Agents' "$base/agents"
   print_location 'Skills' "$base/skills"
   print_location 'Shared workspace' "$shared"
@@ -158,7 +166,7 @@ print_antigravity_locations() {
   rules=$3
   workflows=$4
   skills=$5
-  printf '%s\n' 'Installed Antigravity workflow files:'
+  heading 'Installed Antigravity workflow files:'
   [ -n "$skills" ] && print_location 'Skills' "$skills"
   print_location 'Shared workspace' "$shared"
   [ -n "$rules" ] && print_location 'Rules' "$rules"
@@ -171,7 +179,10 @@ print_file_report() {
   report_name=$1
   report_file=$REPORT_DIR/$2
   [ -s "$report_file" ] || return 0
-  printf '%s\n' "$report_name"
+  case "$2" in
+    installed|overwritten) printf '%s\n' "$(color 32 "$report_name")" ;;
+    skipped) printf '%s\n' "$(color 33 "$report_name")" ;;
+  esac
   while IFS= read -r destination; do
     printf '  %s\n' "$destination"
   done < "$report_file"
@@ -235,7 +246,7 @@ else
   esac
 fi
 
-printf '%s\n' 'Installation file summary:'
+heading 'Installation file summary:'
 print_file_report 'Installed files:' installed
 print_file_report 'Skipped existing files:' skipped
 print_file_report 'Overwritten files:' overwritten

@@ -8,19 +8,27 @@ TOOL=
 SCOPE=
 TARGET=
 FORCE=false
+NO_COLOR_FLAG=false
 DETECTED_TOOLS=
+COLOR=false
+
+if [ -t 1 ] && [ -t 2 ] && [ -z "${NO_COLOR+x}" ]; then COLOR=true; fi
 
 usage() {
-  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--force]" >&2
+  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--force] [--no-color]" >&2
   printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
-fail() { printf '%s\n' "$1" >&2; exit 1; }
+color() {
+  if [ "$COLOR" = true ]; then printf '\033[%sm%s\033[0m' "$1" "$2"; else printf '%s' "$2"; fi
+}
+heading() { printf '%s\n' "$(color '1;34' "$1")"; }
+fail() { printf '%s\n' "$(color 31 "$1")" >&2; exit 1; }
 has_tty() { ( : </dev/tty ) 2>/dev/null; }
 prompt() { has_tty && printf '%s' "$1" > /dev/tty; }
 read_tty() { has_tty && IFS= read -r "$1" < /dev/tty; }
 
 choose_tool() {
-  printf '%s\n' 'Select coding assistant:' > /dev/tty
+  printf '%s\n' "$(color '1;34' 'Select coding assistant:')" > /dev/tty
   printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 All supported assistants' '7 Detect installed assistants automatically.' > /dev/tty
   prompt 'Choice [1-7]: '
   read_tty choice || fail 'Could not read the tool choice from the terminal.'
@@ -48,7 +56,7 @@ detect_tools() {
   command -v agy >/dev/null 2>&1 && detected="$detected antigravity"
   DETECTED_TOOLS=${detected# }
   [ -n "$DETECTED_TOOLS" ] || fail 'No supported assistants were detected. Select one explicitly with --tool.'
-  printf 'Detected assistants: %s\n' "$DETECTED_TOOLS" >&2
+  printf 'Detected assistants: %s\n' "$(color 34 "$DETECTED_TOOLS")" >&2
 }
 
 while [ "$#" -gt 0 ]; do
@@ -60,6 +68,7 @@ while [ "$#" -gt 0 ]; do
       [ -z "$SCOPE" ] || fail 'Choose only one install scope.'; SCOPE=project; shift
       if [ "$#" -gt 0 ] && [ "${1#--}" = "$1" ]; then TARGET=$1; shift; fi ;;
     --force|--yes) FORCE=true; shift ;;
+    --no-color) NO_COLOR_FLAG=true; COLOR=false; shift ;;
     --help|-h) usage; exit 0 ;;
     *) fail "Unsupported argument: $1" ;;
   esac
@@ -97,7 +106,7 @@ TEMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/workflow-toolkit.XXXXXX") || fail 'Could n
 cleanup() { rm -rf "$TEMP_DIR"; }
 trap cleanup 0 1 2 15
 ARCHIVE_PATH=$TEMP_DIR/toolkit.tar.gz
-printf 'Downloading %s at ref %s...\n' "$REPOSITORY" "$REF"
+heading "Downloading $REPOSITORY at ref $REF..."
 curl -fsSL -o "$ARCHIVE_PATH" "$REPOSITORY_URL/archive/$REF.tar.gz" || fail 'Could not download the toolkit archive.'
 tar -xzf "$ARCHIVE_PATH" -C "$TEMP_DIR" || fail 'Could not extract the toolkit archive.'
 TOOLKIT_DIR=
@@ -108,15 +117,11 @@ done
 
 run_local_installer() {
   selected_tool=$1
-  if [ -n "$TARGET" ] && [ "$FORCE" = true ]; then
-    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --target "$TARGET" --force
-  elif [ -n "$TARGET" ]; then
-    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --target "$TARGET"
-  elif [ "$FORCE" = true ]; then
-    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --force
-  else
-    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE"
-  fi
+  set -- --tool "$selected_tool" --scope "$SCOPE"
+  [ -n "$TARGET" ] && set -- "$@" --target "$TARGET"
+  [ "$FORCE" = true ] && set -- "$@" --force
+  [ "$NO_COLOR_FLAG" = true ] && set -- "$@" --no-color
+  "$TOOLKIT_DIR/scripts/install-local.sh" "$@"
 }
 
 if [ "$TOOL" = detect ]; then

@@ -52,7 +52,7 @@ sh "$tmp" --project .
 rm -f "$tmp"
 ```
 
-Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. The installer ends with a file summary listing installed, skipped, and overwritten paths. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
+Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. Use `--no-color` to disable terminal colors; colors are also disabled for non-terminal output and when `NO_COLOR` is set. The installer ends with a file summary listing installed, skipped, and overwritten paths. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
 
 To replace an existing OpenCode configuration deliberately:
 
