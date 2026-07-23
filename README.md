@@ -1,68 +1,78 @@
-# OpenCode Engineering Workflow Toolkit
+# Engineering Workflow Toolkit
 
-A reusable, artifact-driven engineering workflow for OpenCode. It provides four cooperating agents, thirteen skills, playbooks, templates, and safe installation scripts. Agents inherit the model selected by the OpenCode user; no provider or model is hard-coded here.
+A reusable, artifact-driven engineering workflow for coding assistants. It does not select a model or provider. Big Pickle remains an optional workshop gateway example, not a requirement or endorsement.
 
 ## Safety Note
 
-An AI gateway may retain submitted code or use it for training, depending on its terms and settings. Do not submit sensitive, proprietary, regulated, or credential-bearing code unless the selected service and your organization explicitly permit it. Big Pickle is an optional workshop gateway example, not a requirement or endorsement.
+An AI gateway may retain submitted code or use it for training, depending on its terms and settings. Do not submit sensitive, proprietary, regulated, or credential-bearing code unless the selected service and your organization explicitly permit it.
 
-## Contents
+## Design
 
-- `agents/`: `orchestrator`, `planner`, `developer`, and `quality`.
-- `skills/`: OpenCode folder-based skills. Every folder contains its `SKILL.md`.
-- `playbooks/`: new feature, bug fix, and release routes.
-- `templates/`: artifact starting points.
-- `scripts/`: global installation and project bootstrap scripts.
+The toolkit is deliberately not a runtime translator. `core/` holds canonical role behavior, portable `SKILL.md` skills, playbooks, templates, and the `AGENTS.md` template. `adapters/` are hand-maintained wrappers that put the relevant role behavior into each tool's actual agent/configuration format and express that tool's permission or tool semantics. When a tool requires self-contained agent files, their concise bodies identify their core source; update both deliberately.
 
-`.opencode/agents` and `.opencode/skills` are the OpenCode runtime discovery paths. `.agents/` is deliberately only the project workspace for playbooks, templates, and mutable artifacts.
+| Assistant | Support | Installed project assets |
+| --- | --- | --- |
+| OpenCode | Full | `.opencode/agents`, `.opencode/skills`, `AGENTS.md` |
+| Claude Code | Full | `.claude/agents`, `.claude/skills`, `CLAUDE.md` shim importing `@AGENTS.md` |
+| Codex CLI | Full | `.codex/agents/*.toml`, `.agents/skills`, `AGENTS.md` |
+| Grok Build | Full | `.grok/agents`, `.grok/skills`, `AGENTS.md` |
+| Antigravity | Partial | `.agents/skills`, `.agents/rules`, `.agents/workflows`, `AGENTS.md` |
 
-## Install from GitHub
+Antigravity's documented project customization uses skills, rules, and workflows. Its role subagents are dynamically defined and invoked during a conversation, so this toolkit does not claim static project-local Antigravity role definitions. Its installed rule instructs the parent to dynamically define planner, developer, and quality roles.
 
-Download the installer, inspect it before running it, then install globally:
+All project installs also add `.agents/playbooks`, `.agents/templates`, and `.agents/artifacts/.gitkeep`.
+
+## Install
+
+Download and inspect the script before running it. With no scope or tool flags in a terminal, it presents this numbered menu:
+
+1. OpenCode
+2. Claude Code
+3. Codex
+4. Grok Build
+5. Antigravity
+6. All supported assistants
+7. Detect installed assistants automatically
+
+It then asks whether to install globally or into the current project. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation; it fails if no supported assistant is found.
 
 ```sh
 curl -fsSLO https://raw.githubusercontent.com/prinx/agents/main/install.sh
-sh install.sh --global
+sh install.sh
 ```
 
-The installer downloads this repository into a temporary directory, invokes the bundled installer, and removes the temporary files afterward. It copies agents and skills into `~/.config/opencode/` and creates `~/.config/opencode/workflow/user-preferences.md` only when it does not already exist. Existing runtime files prompt before overwrite. Edit that preferences file to describe communication, technology, and delivery preferences the planner should consider.
-
-## Bootstrap a Project
-
-From the target project, download the installer to a temporary location and run:
+Noninteractive examples:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh -o /tmp/opencode-workflow-install.sh
-sh /tmp/opencode-workflow-install.sh --project .
+# Global OpenCode configuration.
+sh install.sh --tool opencode --global
+
+# Install Claude Code assets into a named project.
+sh install.sh --tool claude-code --project "/path/to/project"
+
+# Install every adapter into the current project, overwriting existing files.
+sh install.sh --tool all --project . --yes
+
+# Install only automatically detected assistant configuration.
+sh install.sh --tool detect --project .
 ```
 
-The bootstrap script creates `.opencode/agents`, `.opencode/skills`, `.agents/playbooks`, `.agents/templates`, and `.agents/artifacts/.gitkeep`. It creates a minimal `AGENTS.md` only when one is absent. It refuses to overwrite existing files without an interactive confirmation.
+Existing files are preserved unless you confirm each overwrite or pass `--yes`. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
 
-Quit and restart OpenCode after adding or changing agents or skills. OpenCode loads these files at startup and does not hot-reload them.
+### Versions
 
-## Version Pinning
-
-The examples use `main` because no release tag has been made yet. For stable workshop use, inspect and pin a release tag or commit with `--ref <release-tag-or-commit>`:
+`main` means the current GitHub branch at `prinx/agents`, not a release. The interactive flow installs that branch and explains that a tag or commit requires `--ref`; it does not pretend it can re-download a different archive after startup. Pin a workshop to a reviewed tag or commit:
 
 ```sh
-sh install.sh --ref <release-tag-or-commit> --global
+sh install.sh --ref <tag-or-commit> --tool codex --project .
 ```
 
-## Typical Gateway Walkthrough
+## Artifact And Git Policy
 
-1. Configure and select an OpenCode model through your approved AI gateway.
-2. Optionally use Big Pickle for a workshop exercise after reviewing its current data-handling terms.
-3. Restart OpenCode, select `orchestrator`, and describe the work.
-4. The orchestrator selects fast path for a small bounded bug/change (`developer` then `quality`) or full path for a new/complex feature (`planner`, `developer`, then `quality`).
-5. Answer any planner question batch relayed by the orchestrator. Do not assume subagents can run their own human conversation.
-6. Review the artifacts and explicitly request deployment only after `.agents/artifacts/qa-report.md` says `PASS` and `.agents/artifacts/review.md` says `APPROVE`.
+Commit adapters and durable workflow artifacts: `AGENTS.md`, `requirements.md`, `plan.md`, `backlog.md`, and `project-memory.md`. `.gitignore` ignores transient `.agents/artifacts/state.md` and `failure-log.md`.
 
-## Artifact Ownership
+Before implementation, the developer role and `branch-safely` skill check whether Git exists. In an existing repository they inspect status and branch, preserve unrelated work, and create a task feature branch rather than modifying `main` or `master`. In a non-repository they ask whether to initialize Git and explain rollback/branch value; when the human is unsure or requests the default, they use `git init -b main`. They never set global identity, require a local identity check before a human-requested baseline commit, and never create a commit without explicit human request. A new repository may remain on `main` until its explicitly requested baseline commit, after which normal feature-branch policy applies.
 
-- `AGENTS.md`: durable, human-maintained project conventions.
-- `project-memory.md`: dynamic project facts and decisions; planner initializes and updates it during planning.
-- `state.md`: dynamic handoff state owned by the orchestrator.
-- `requirements.md`, `plan.md`, `backlog.md`: planner-owned planning artifacts.
-- `qa-report.md`, `review.md`: quality-owned evidence and outcomes.
+## Workflow
 
-Documentation is updated at meaningful milestones. Monitoring is standalone and on demand. Deployment always requires an explicit human request.
+The orchestrator routes a small bounded change through developer then quality. A complex feature goes planner, developer, then quality. Planner questions return through the orchestrator. Deployment always needs an explicit human request plus `PASS` QA and `APPROVE` review artifacts.

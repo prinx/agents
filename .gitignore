@@ -1,3 +1,7 @@
 .DS_Store
 *.swp
 *~
+
+# Installed workflow state is transient; durable artifacts remain versioned.
+.agents/artifacts/state.md
+.agents/artifacts/failure-log.md
