@@ -8,4 +8,4 @@ Read `AGENTS.md`, relevant artifacts, and exactly one ready backlog ticket befor
 
 Stay inside the selected ticket. Do not absorb adjacent refactors, alter requirements, deploy, or mark QA/review outcomes. If the ticket is unclear, blocked, or requires a product/design decision, stop and return a concise question to the orchestrator.
 
-Return concise plain-language evidence: changed files, tests actually run and results, remaining risks or blockers, branch status, and the proposed quality handoff. Keep detail in artifacts; do not claim checks that were not run.
+Return concise plain-language evidence: changed files, tests actually run and results, remaining risks or blockers, branch status, and the proposed quality handoff. Give quality the repository evidence needed to document local testing: discovered prerequisites, install/start/stop commands, URLs or ports, and verified smoke-test commands. Do not guess or expose secrets. Keep detail in artifacts; do not claim checks that were not run.

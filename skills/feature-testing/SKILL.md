@@ -5,4 +5,4 @@ description: Use when validating a completed feature against its acceptance crit
 
 # Feature Testing
 
-Map each acceptance criterion to observable behavior. Test normal, failure, and authorization or validation paths relevant to the change. Report coverage and any criteria that could not be verified.
+Map each acceptance criterion to observable behavior. Test normal, failure, and authorization or validation paths relevant to the change. Report coverage and any criteria that could not be verified. Give quality concise, evidence-based manual steps for `.agents/artifacts/local-test.md`; do not invent setup, URLs, or outcomes.

@@ -14,7 +14,7 @@ The human approves requirements and plans. Deployment runs only when the human a
 
 ### Interaction style
 
-Human-facing updates use plain language and stay short: current status, the few important decisions or risks, and the next action. After planning, the orchestrator summarizes the proposed requirements, plan, and backlog, then waits for explicit approval before implementation in both checkpointed and autonomous delivery. It never treats silence as approval. Detailed test and review evidence stays in artifacts unless you ask to see it.
+Human-facing updates use plain language and stay short: current status, the few important decisions or risks, and the next action. After planning, the orchestrator summarizes the proposed requirements, plan, and backlog, then waits for explicit approval before implementation in both checkpointed and autonomous delivery. It never treats silence as approval. Detailed test and review evidence stays in artifacts unless you ask to see it. At completed user-facing work, the orchestrator gives you the exact local test commands and URL from the quality-owned local-test artifact, followed by the next action.
 
 ## Install
 
@@ -150,11 +150,11 @@ Antigravity's documented project customization uses skills, rules, and workflows
 
 All project installs also add `.agents/playbooks`, `.agents/templates`, and `.agents/artifacts/.gitkeep`.
 
-The orchestrator routes a small bounded change through developer then quality. A complex feature goes planner, developer, then quality. Planner questions return through the orchestrator. Deployment always needs an explicit human request plus `PASS` QA and `APPROVE` review artifacts.
+The orchestrator routes a small bounded change through developer then quality. A complex feature goes planner, developer, then quality. Planner questions return through the orchestrator. Quality derives local testing from the repository rather than guesses and writes `.agents/artifacts/local-test.md`: applicable safe setup, install and automated commands actually run with results, start command, known URL or port, acceptance-criteria manual steps, cleanup, and limitations. For a library, CLI, or API-only project, it records the relevant test command and a verified usage or smoke test when available. Quality cannot give final user-facing `PASS` without a valid local test path; it reports `BLOCKED` or `PASS_WITH_NOTES` with what is missing instead. Deployment always needs an explicit human request plus `PASS` QA and `APPROVE` review artifacts.
 
 ## Artifact and Git policy
 
-Commit adapters and durable workflow artifacts: `AGENTS.md`, `requirements.md`, `plan.md`, `backlog.md`, and `project-memory.md`. `.gitignore` ignores transient `.agents/artifacts/state.md` and `failure-log.md`.
+Commit adapters and durable workflow artifacts: `AGENTS.md`, `requirements.md`, `plan.md`, `backlog.md`, `project-memory.md`, and quality-owned `local-test.md`. `.gitignore` ignores transient `.agents/artifacts/state.md` and `failure-log.md`.
 
 Before implementation, the developer role and `branch-safely` skill check whether Git exists. In an existing repository they inspect status and branch, preserve unrelated work, and create a task feature branch rather than modifying `main` or `master`. In a non-repository they ask whether to initialize Git and explain rollback/branch value; when the human is unsure or requests the default, they use `git init -b main`. They never set global identity, require a local identity check before a human-requested baseline commit, and never create a commit without explicit human request. A new repository may remain on `main` until its explicitly requested baseline commit, after which normal feature-branch policy applies.
 

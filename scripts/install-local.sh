@@ -70,6 +70,7 @@ install_shared_project() {
   copy_tree_files "$TOOLKIT_DIR/templates" "$target_dir/.agents/templates"
   mkdir -p "$target_dir/.agents/artifacts"
   [ -e "$target_dir/.agents/artifacts/.gitkeep" ] || : > "$target_dir/.agents/artifacts/.gitkeep"
+  copy_file "$TOOLKIT_DIR/templates/local-test-template.md" "$target_dir/.agents/artifacts/local-test.md"
   copy_file "$TOOLKIT_DIR/templates/AGENTS.md" "$target_dir/AGENTS.md"
 }
 
