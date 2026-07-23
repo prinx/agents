@@ -70,17 +70,25 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 
 ## How to use
 
-Start in your bootstrapped project and describe what you want. In tools that let you choose a primary agent, such as OpenCode, select or switch to the orchestrator first. Other coding tools may have a different way to select the orchestrator.
+Start in your bootstrapped project and describe what you want. Each tool handles roles differently; do not expect the OpenCode primary-agent picker everywhere.
+
+### Tool-specific use
+
+- **OpenCode:** Select or switch to the `orchestrator` as your primary agent, then simply state your goal. OpenCode lets you switch primary agents during a session. See the [OpenCode agents documentation](https://opencode.ai/docs/agents/).
+- **Codex CLI / ChatGPT Codex app:** Installed roles are named subagents, not a primary-agent picker. Ask Codex to use or spawn `orchestrator` to coordinate the work. In the interactive CLI, `/agent` lets you inspect and switch between agent threads while they run. See the [Codex subagents documentation](https://developers.openai.com/codex/agent-configuration/subagents).
+- **Claude Code:** Installed roles are subagents. Ask Claude to delegate explicitly, for example: `Use the orchestrator agent to coordinate this work.` See the [Claude Code subagents documentation](https://code.claude.com/docs/en/sub-agents).
+- **Grok Build:** Select the installed `orchestrator` with `/agents`, then state your goal. Grok Build supports project agent definitions and agent selection. See the [Grok Build subagents documentation](https://docs.x.ai/build/features/subagents).
+- **Google Antigravity:** Support is partial. This toolkit installs rules and workflows, not a selectable static orchestrator role. State your goal and ask the agent to follow the installed workflow; the rule directs it to define and use planner, developer, and quality subagents when needed. See the [Antigravity rules and workflows documentation](https://antigravity.google/docs/rules-workflows) and [subagents documentation](https://antigravity.google/docs/subagents).
 
 ### New project
 
-After selecting the orchestrator, tell your coding assistant:
+After selecting the orchestrator where your tool supports it, tell your coding assistant:
 
 > I want to build a link shortener web app.
 
-If your tool cannot select an agent directly, use:
+Use this fallback in any tool:
 
-> I want to build a link shortener web app. Use the orchestrator to help me.
+> I want to build a link shortener web app. Use the orchestrator to coordinate the work.
 
 For a bigger project, the orchestrator brings in the planner. The planner asks questions and makes a plan. Answer the questions and review the plan. The developer and quality roles then work through one feature at a time.
 
