@@ -12,6 +12,10 @@ In this workflow, agents act like team members. The orchestrator guides the work
 
 The human approves requirements and plans. Deployment runs only when the human asks for it. Monitoring is available when needed. Small bug fixes can go straight from developer to quality.
 
+### Interaction style
+
+Human-facing updates use plain language and stay short: current status, the few important decisions or risks, and the next action. After planning, the orchestrator summarizes the proposed requirements, plan, and backlog, then waits for explicit approval before implementation in both checkpointed and autonomous delivery. It never treats silence as approval. Detailed test and review evidence stays in artifacts unless you ask to see it.
+
 ## Install
 
 For interactive installation, run:

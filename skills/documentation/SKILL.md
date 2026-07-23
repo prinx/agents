@@ -5,4 +5,4 @@ description: Use at a meaningful delivery milestone when durable user, API, or o
 
 # Documentation
 
-Update only documentation affected by a milestone, release, or durable behavior change. Keep it accurate, audience-appropriate, and tied to verified behavior. Do not create routine documentation churn for each handoff.
+Update only documentation affected by a milestone, release, or durable behavior change. Keep it accurate, plain-language, audience-appropriate, and tied to verified behavior. Do not create routine documentation churn for each handoff or claim unverified commands, URLs, or results.

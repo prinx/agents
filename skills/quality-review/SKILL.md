@@ -5,4 +5,4 @@ description: Use when reviewing a ticket diff for correctness, regressions, arch
 
 # Quality Review
 
-Review the diff against ticket acceptance criteria and project conventions. Prioritize correctness, security, architecture alignment, maintainability, and scope. Write actionable findings with severity and produce only `APPROVE` or `REQUEST CHANGES`.
+Review the diff against ticket acceptance criteria and project conventions. Prioritize correctness, security, architecture alignment, maintainability, and scope. Write actionable findings with severity and produce only `APPROVE` or `REQUEST CHANGES`. Return concise evidence to the orchestrator; keep detailed findings in the review artifact and never claim checks that were not run.
