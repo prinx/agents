@@ -14,7 +14,15 @@ The human approves requirements and plans. Deployment runs only when the human a
 
 ## Install
 
-Download and inspect the script before running it. With no scope or tool flags in a terminal, it presents this numbered menu:
+For interactive installation, run:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s --
+```
+
+This does not leave `install.sh` in your current folder. The installer also removes its temporary download files.
+
+With no scope or tool flags, it presents this numbered menu:
 
 1. OpenCode
 2. Claude Code
@@ -26,25 +34,22 @@ Download and inspect the script before running it. With no scope or tool flags i
 
 It then asks whether to install globally or into the current project. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation; it fails if no supported assistant is found.
 
+For OpenCode, you can choose the scope directly:
+
 ```sh
-curl -fsSLO https://raw.githubusercontent.com/prinx/agents/main/install.sh
-sh install.sh
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --global
+
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --project .
 ```
 
-Noninteractive examples:
+`curl | sh` is convenient. Inspect the source first, or use a temporary file if you want to review it before running it:
 
 ```sh
-# Global OpenCode configuration.
-sh install.sh --tool opencode --global
-
-# Install Claude Code assets into a named project.
-sh install.sh --tool claude-code --project "/path/to/project"
-
-# Install every adapter into the current project, overwriting existing files.
-sh install.sh --tool all --project . --yes
-
-# Install only automatically detected assistant configuration.
-sh install.sh --tool detect --project .
+tmp=$(mktemp)
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh -o "$tmp"
+# Read "$tmp" before running it.
+sh "$tmp" --project .
+rm -f "$tmp"
 ```
 
 Existing files are preserved unless you confirm each overwrite or pass `--yes`. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
@@ -54,7 +59,7 @@ Existing files are preserved unless you confirm each overwrite or pass `--yes`. 
 `main` means the current GitHub branch at `prinx/agents`, not a release. The interactive flow installs that branch and explains that a tag or commit requires `--ref`; it does not pretend it can re-download a different archive after startup. Pin a workshop to a reviewed tag or commit:
 
 ```sh
-sh install.sh --ref <tag-or-commit> --tool codex --project .
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --ref <tag-or-commit> --tool codex --project .
 ```
 
 ## How to use
