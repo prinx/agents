@@ -52,7 +52,7 @@ sh "$tmp" --project .
 rm -f "$tmp"
 ```
 
-Existing files are preserved unless you confirm each overwrite or pass `--yes`. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
+Existing files are preserved unless you confirm each overwrite or pass `--yes`. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
 
 ### Versions
 
