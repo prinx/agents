@@ -1,36 +1,16 @@
 # Engineering Workflow Toolkit
 
-A reusable, artifact-driven engineering workflow for coding assistants.
+A reusable engineering workflow for coding assistants.
 
-The toolkit never configures a model. Each installed assistant uses the model/provider already selected by its user. Big Pickle is an optional workshop gateway example, not a default, requirement, or endorsement.
+The toolkit does not choose the model. It uses the model you already chose in your coding assistant.
 
-## Why This Workflow
+## Why this workflow
 
-This workflow is grounded in the software development lifecycle (SDLC), the proven way teams generally develop software. AI changes the tools and team structure, but it does not remove the need for clear goals, planning, incremental implementation, quality validation, human accountability, and safe release. Use AI tools to achieve those SDLC goals, and adapt practices when the work calls for it.
+SDLC is how we build software whether we follow it very strictly or only partly; the main principles stay the same. We understand the problem, make a plan, build in small parts, test and review, then release.
 
-Agents act as specialized team members with defined roles and responsibilities. The orchestrator coordinates their handoffs and moves work through the workflow. For large or complex work, it invokes the planner, which clarifies intended outcomes and breaks the goal into small, ordered tasks. The developer implements one task at a time and collaborates with the quality reviewer for validation and review.
+In this workflow, agents act like team members. The orchestrator guides the work. For bigger work, the planner handles it and breaks it into small tasks. The developer and quality roles complete one task at a time. Outcomes are passed between roles through project files. The human approves important decisions and deploys the software.
 
-Artifacts carry outcomes and decisions between roles. Humans remain in control: they approve requirements and plans, make required decisions, and approve deployment. Deployment skills run only on explicit human request; monitoring is available on demand. Bug fixes and other small bounded changes take a shorter developer-to-quality fast path.
-
-## Safety Note
-
-An AI gateway may retain submitted code or use it for training, depending on its terms and settings. Do not submit sensitive, proprietary, regulated, or credential-bearing code unless the selected service and your organization explicitly permit it.
-
-## Design
-
-The toolkit is deliberately not a runtime translator. `core/` holds canonical role behavior, portable `SKILL.md` skills, playbooks, templates, and the `AGENTS.md` template. `adapters/` are hand-maintained wrappers that put the relevant role behavior into each tool's actual agent/configuration format and express that tool's permission or tool semantics. When a tool requires self-contained agent files, their concise bodies identify their core source; update both deliberately.
-
-| Assistant | Support | Installed project assets |
-| --- | --- | --- |
-| OpenCode | Full | `.opencode/agents`, `.opencode/skills`, `AGENTS.md` |
-| Claude Code | Full | `.claude/agents`, `.claude/skills`, `CLAUDE.md` shim importing `@AGENTS.md` |
-| Codex CLI | Full | `.codex/agents/*.toml`, `.agents/skills`, `AGENTS.md` |
-| Grok Build | Full | `.grok/agents`, `.grok/skills`, `AGENTS.md` |
-| Antigravity | Partial | `.agents/skills`, `.agents/rules`, `.agents/workflows`, `AGENTS.md` |
-
-Antigravity's documented project customization uses skills, rules, and workflows. Its role subagents are dynamically defined and invoked during a conversation, so this toolkit does not claim static project-local Antigravity role definitions. Its installed rule instructs the parent to dynamically define planner, developer, and quality roles.
-
-All project installs also add `.agents/playbooks`, `.agents/templates`, and `.agents/artifacts/.gitkeep`.
+The human approves requirements and plans. Deployment runs only when the human asks for it. Monitoring is available when needed. Small bug fixes can go straight from developer to quality.
 
 ## Install
 
@@ -77,25 +57,21 @@ Existing files are preserved unless you confirm each overwrite or pass `--yes`. 
 sh install.sh --ref <tag-or-commit> --tool codex --project .
 ```
 
-## How to use the workflow
+## How to use
 
-Start in your bootstrapped project and describe the outcome you want. The exact wording and invocation depend on the installed assistant adapter: in tools that support direct agent mentions, mention `@orchestrator`; in tools that let you choose a primary agent, select the orchestrator and state the goal.
+Start in your bootstrapped project and describe what you want. In tools that let you choose a primary agent, such as OpenCode, select or switch to the orchestrator first. Other coding tools may have a different way to select the orchestrator.
 
-### Build a new project
+### New project
 
-For example, tell your coding assistant:
+After selecting the orchestrator, tell your coding assistant:
 
-> I want to develop a link shortener web app. Use the orchestrator to help me build it.
+> I want to build a link shortener web app.
 
-For a substantial new project, the orchestrator selects the planner. The planner asks clarifying questions, then produces requirements, a plan, and a backlog. Answer its questions and review the approval gates. The developer and quality roles then complete and validate tickets one at a time.
+If your tool cannot select an agent directly, use:
 
-### Fix a bug
+> I want to build a link shortener web app. Use the orchestrator to help me.
 
-For example:
-
-> The shortened link redirects to a 404 page for some users. Use the workflow to investigate and fix it.
-
-A bounded issue normally takes the fast path: developer, then quality. The planner is skipped when it is not needed.
+For a bigger project, the orchestrator brings in the planner. The planner asks questions and makes a plan. Answer the questions and review the plan. The developer and quality roles then work through one feature at a time.
 
 ### Add a feature
 
@@ -103,26 +79,58 @@ For example:
 
 > Add custom aliases so users can choose the short code for a link.
 
-The orchestrator decides whether the scope and risk fit the small-change fast path or need the planner and full planning. Work then proceeds ticket by ticket.
+The orchestrator decides if this needs a planner. The work then moves through one feature at a time.
 
-### Deploy and monitor
+### Fix a bug
 
-Deployment is explicit. For example:
+For example:
 
-> Deploy the approved link shortener to Vercel.
+> Some shortened links send users to a 404 page. Please investigate and fix it.
 
-The toolkit includes a generic deployment workflow and, today, only a Vercel implementation (`deploy-vercel`). It does not deploy automatically. Add provider or infrastructure skills that match your environment, such as Netlify, Cloudflare, AWS, Docker, or Kubernetes.
+Small bugs usually go to the developer, then quality. The planner is not needed for every bug.
+
+### Monitor
 
 Ask for monitoring when you need it, for example:
 
 > Check production health for the link shortener.
 
-## Artifact And Git Policy
+### Deploy
+
+Deployment is explicit. For example:
+
+> Deploy the approved link shortener to Vercel.
+
+The toolkit has a general deployment workflow and currently includes Vercel support (`deploy-vercel`). It does not deploy by itself. Add skills for the tools you use, such as Netlify, Cloudflare, AWS, Docker, or Kubernetes.
+
+## What's inside this repo
+
+`core/` holds the main role behavior, portable `SKILL.md` skills, playbooks, templates, and the `AGENTS.md` template. `adapters/` are hand-maintained wrappers that put the relevant role behavior into each tool's agent or configuration format and express that tool's permission or tool rules. When a tool needs self-contained agent files, their short bodies identify their core source; update both deliberately.
+
+| Assistant | Support | Installed project assets |
+| --- | --- | --- |
+| OpenCode | Full | `.opencode/agents`, `.opencode/skills`, `AGENTS.md` |
+| Claude Code | Full | `.claude/agents`, `.claude/skills`, `CLAUDE.md` shim importing `@AGENTS.md` |
+| Codex CLI | Full | `.codex/agents/*.toml`, `.agents/skills`, `AGENTS.md` |
+| Grok Build | Full | `.grok/agents`, `.grok/skills`, `AGENTS.md` |
+| Antigravity | Partial | `.agents/skills`, `.agents/rules`, `.agents/workflows`, `AGENTS.md` |
+
+Antigravity's documented project customization uses skills, rules, and workflows. Its role subagents are dynamically defined and invoked during a conversation, so this toolkit does not claim static project-local Antigravity role definitions. Its installed rule instructs the parent to dynamically define planner, developer, and quality roles.
+
+All project installs also add `.agents/playbooks`, `.agents/templates`, and `.agents/artifacts/.gitkeep`.
+
+The orchestrator routes a small bounded change through developer then quality. A complex feature goes planner, developer, then quality. Planner questions return through the orchestrator. Deployment always needs an explicit human request plus `PASS` QA and `APPROVE` review artifacts.
+
+## Artifact and Git policy
 
 Commit adapters and durable workflow artifacts: `AGENTS.md`, `requirements.md`, `plan.md`, `backlog.md`, and `project-memory.md`. `.gitignore` ignores transient `.agents/artifacts/state.md` and `failure-log.md`.
 
 Before implementation, the developer role and `branch-safely` skill check whether Git exists. In an existing repository they inspect status and branch, preserve unrelated work, and create a task feature branch rather than modifying `main` or `master`. In a non-repository they ask whether to initialize Git and explain rollback/branch value; when the human is unsure or requests the default, they use `git init -b main`. They never set global identity, require a local identity check before a human-requested baseline commit, and never create a commit without explicit human request. A new repository may remain on `main` until its explicitly requested baseline commit, after which normal feature-branch policy applies.
 
-## Workflow
+## Safety note
 
-The orchestrator routes a small bounded change through developer then quality. A complex feature goes planner, developer, then quality. Planner questions return through the orchestrator. Deployment always needs an explicit human request plus `PASS` QA and `APPROVE` review artifacts.
+An AI gateway may retain submitted code or use it for training, depending on its terms and settings. Do not submit sensitive, proprietary, regulated, or credential-bearing code unless the selected service and your organization explicitly permit it.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
