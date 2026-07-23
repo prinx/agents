@@ -7,11 +7,12 @@ REF=main
 TOOL=
 SCOPE=
 TARGET=
-YES=false
+FORCE=false
 DETECTED_TOOLS=
 
 usage() {
-  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--yes]" >&2
+  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--force]" >&2
+  printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
 fail() { printf '%s\n' "$1" >&2; exit 1; }
 has_tty() { ( : </dev/tty ) 2>/dev/null; }
@@ -58,7 +59,7 @@ while [ "$#" -gt 0 ]; do
     --project)
       [ -z "$SCOPE" ] || fail 'Choose only one install scope.'; SCOPE=project; shift
       if [ "$#" -gt 0 ] && [ "${1#--}" = "$1" ]; then TARGET=$1; shift; fi ;;
-    --yes) YES=true; shift ;;
+    --force|--yes) FORCE=true; shift ;;
     --help|-h) usage; exit 0 ;;
     *) fail "Unsupported argument: $1" ;;
   esac
@@ -77,14 +78,14 @@ case "$TOOL" in opencode|claude-code|codex|grok|antigravity|all|detect) ;; *) fa
 
 if [ "$TOOL" = detect ]; then
   detect_tools
-  if [ "$YES" = false ] && has_tty; then
+  if has_tty; then
     prompt 'Install for detected assistants? [y/N] '
     read_tty answer || fail 'Could not read the confirmation from the terminal.'
     [ "$answer" = y ] || [ "$answer" = Y ] || exit 0
   fi
 fi
-if [ "$TOOL" = all ] && [ "$SCOPE" = global ] && [ "$YES" = false ]; then
-  if ! has_tty; then fail 'Global installation for all assistants requires --yes outside a terminal.'; fi
+if [ "$TOOL" = all ] && [ "$SCOPE" = global ]; then
+  if ! has_tty; then fail 'Global installation for all assistants requires an interactive terminal confirmation.'; fi
   prompt 'Install global configuration for all supported assistants? [y/N] '
   read_tty answer || fail 'Could not read the confirmation from the terminal.'
   [ "$answer" = y ] || [ "$answer" = Y ] || exit 0
@@ -107,12 +108,12 @@ done
 
 run_local_installer() {
   selected_tool=$1
-  if [ -n "$TARGET" ] && [ "$YES" = true ]; then
-    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --target "$TARGET" --yes
+  if [ -n "$TARGET" ] && [ "$FORCE" = true ]; then
+    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --target "$TARGET" --force
   elif [ -n "$TARGET" ]; then
     "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --target "$TARGET"
-  elif [ "$YES" = true ]; then
-    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --yes
+  elif [ "$FORCE" = true ]; then
+    "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE" --force
   else
     "$TOOLKIT_DIR/scripts/install-local.sh" --tool "$selected_tool" --scope "$SCOPE"
   fi

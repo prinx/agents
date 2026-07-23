@@ -6,19 +6,23 @@ TOOLKIT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 TOOL=
 SCOPE=
 TARGET=
-YES=false
+FORCE=false
 
 fail() { printf '%s\n' "$1" >&2; exit 1; }
-has_tty() { ( : </dev/tty ) 2>/dev/null; }
-prompt() { has_tty && printf '%s' "$1" > /dev/tty; }
-read_tty() { has_tty && IFS= read -r "$1" < /dev/tty; }
+usage() {
+  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|all --scope global|project [--target <directory>] [--force]" >&2
+  printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
+}
+REPORT_DIR=$(mktemp -d "${TMPDIR:-/tmp}/workflow-toolkit-report.XXXXXX") || fail 'Could not create an installation report directory.'
+trap 'rm -rf "$REPORT_DIR"' 0 1 2 15
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --tool) TOOL=${2:?Missing value for --tool.}; shift 2 ;;
     --scope) SCOPE=${2:?Missing value for --scope.}; shift 2 ;;
     --target) TARGET=${2:?Missing value for --target.}; shift 2 ;;
-    --yes) YES=true; shift ;;
+    --force|--yes) FORCE=true; shift ;;
+    --help|-h) usage; exit 0 ;;
     *) fail "Unsupported bundled-installer argument: $1" ;;
   esac
 done
@@ -26,32 +30,27 @@ done
 case "$TOOL" in opencode|claude-code|codex|grok|antigravity|all) ;; *) fail 'Invalid tool.' ;; esac
 case "$SCOPE" in global|project) ;; *) fail 'Invalid install scope.' ;; esac
 
-confirm_overwrite() {
-  destination=$1
-  [ ! -e "$destination" ] && return 0
-  [ "$YES" = true ] && return 0
-  if ! has_tty; then
-    printf 'Refusing to overwrite existing %s without --yes.\n' "$destination" >&2
-    return 1
-  fi
-  prompt "Overwrite $destination? [y/N] "
-  read_tty answer || return 1
-  [ "$answer" = y ] || [ "$answer" = Y ]
-}
-
 copy_file() {
   source_file=$1 destination=$2
-  if ! confirm_overwrite "$destination"; then
-    printf 'Preserved %s\n' "$destination" >&2
+  exists=false
+  [ -e "$destination" ] && exists=true
+  if [ "$exists" = true ] && [ "$FORCE" = false ]; then
+    printf '%s\n' "$destination" >> "$REPORT_DIR/skipped"
     return 0
   fi
   mkdir -p "$(dirname -- "$destination")"
   cp "$source_file" "$destination"
+  if [ "$exists" = true ]; then
+    printf '%s\n' "$destination" >> "$REPORT_DIR/overwritten"
+  else
+    printf '%s\n' "$destination" >> "$REPORT_DIR/installed"
+  fi
 }
 
 copy_tree_files() {
   source_root=$1 destination_root=$2
   (cd "$source_root" && find . -type f -print) | while IFS= read -r relative; do
+    relative=${relative#./}
     copy_file "$source_root/$relative" "$destination_root/$relative"
   done
 }
@@ -168,6 +167,16 @@ print_antigravity_locations() {
   return 0
 }
 
+print_file_report() {
+  report_name=$1
+  report_file=$REPORT_DIR/$2
+  [ -s "$report_file" ] || return 0
+  printf '%s\n' "$report_name"
+  while IFS= read -r destination; do
+    printf '  %s\n' "$destination"
+  done < "$report_file"
+}
+
 if [ "$SCOPE" = project ]; then
   TARGET=${TARGET:-"$(pwd)"}
   [ -d "$TARGET" ] || fail "Target project directory does not exist: $TARGET"
@@ -225,3 +234,8 @@ else
       print_antigravity_locations "$HOME/.agents" '' '' '' "$HOME/.gemini/config/skills" ;;
   esac
 fi
+
+printf '%s\n' 'Installation file summary:'
+print_file_report 'Installed files:' installed
+print_file_report 'Skipped existing files:' skipped
+print_file_report 'Overwritten files:' overwritten

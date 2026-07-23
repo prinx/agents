@@ -52,7 +52,13 @@ sh "$tmp" --project .
 rm -f "$tmp"
 ```
 
-Existing files are preserved unless you confirm each overwrite or pass `--yes`. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
+Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. The installer ends with a file summary listing installed, skipped, and overwritten paths. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
+
+To replace an existing OpenCode configuration deliberately:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --project . --force
+```
 
 ### Versions
 
