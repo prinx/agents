@@ -1,16 +1,20 @@
 # Engineering Workflow Toolkit
 
-A reusable engineering workflow for coding assistants.
-
-The toolkit does not choose the model. It uses the model you already chose in your coding assistant.
+An AI agent workflow for developers.
 
 ## Why this workflow
 
-SDLC is how we build software whether we follow it very strictly or only partly; the main principles stay the same. We understand the problem, make a plan, build in small parts, test and review, then release.
+Building software usually follows the same steps: understand the problem, make a plan, build in small parts, test the work, review it, and release it.
 
-In this workflow, agents act like team members. The orchestrator guides the work. For bigger work, the planner handles it and breaks it into small tasks. The developer and quality roles complete one task at a time. Outcomes are passed between roles through project files. The human approves important decisions and deploys the software.
+This toolkit uses AI agents to help with those steps. Each agent has a role, like a member of a software team.
 
-The human approves requirements and plans. Deployment runs only when the human asks for it. Monitoring is available when needed. Small bug fixes can go straight from developer to quality.
+- You send requests to the orchestrator.
+- The orchestrator guides the work and gives tasks to other agents when needed.
+- The planner asks questions first, then creates requirements, architecture, and an implementation plan.
+- The developer builds one feature at a time following the plan.
+- The quality reviewer checks that each feature meets its acceptance criteria and works as expected.
+- You approve important decisions, review plans, test locally, and choose when to deploy.
+- Agents keep work organized, but you remain in control.
 
 ### Interaction style
 
