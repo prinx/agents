@@ -28,22 +28,35 @@ prompt() { has_tty && printf '%s' "$1" > /dev/tty; }
 read_tty() { has_tty && IFS= read -r "$1" < /dev/tty; }
 
 choose_tool() {
-  printf '%s\n' "$(color '1;34' 'Select coding assistant:')" > /dev/tty
-  printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 All supported assistants' '7 Detect installed assistants automatically.' > /dev/tty
-  prompt 'Choice [1-7]: '
-  read_tty choice || fail 'Could not read the tool choice from the terminal.'
-  case "$choice" in
-    1) TOOL=opencode ;; 2) TOOL=claude-code ;; 3) TOOL=codex ;; 4) TOOL=grok ;;
-    5) TOOL=antigravity ;; 6) TOOL=all ;; 7) TOOL=detect ;;
-    *) fail 'Choose a number from 1 through 7.' ;;
-  esac
+  default_choice=$1
+  while :; do
+    printf '%s\n' "$(color '1;34' 'Select coding assistant:')" > /dev/tty
+    printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 All supported assistants' '7 Detect installed assistants automatically.' > /dev/tty
+    if [ "$default_choice" = detect ]; then prompt 'Choice [7]: '; else prompt 'Choice [1-6]: '; fi
+    read_tty choice || fail 'Could not read the tool choice from the terminal.'
+    [ -n "$choice" ] || choice=7
+    case "$choice" in
+      1) TOOL=opencode ;; 2) TOOL=claude-code ;; 3) TOOL=codex ;; 4) TOOL=grok ;;
+      5) TOOL=antigravity ;; 6) TOOL=all ;; 7) TOOL=detect ;;
+      *) printf '%s\n' 'Choose a number from 1 through 7.' >&2; continue ;;
+    esac
+    if [ "$default_choice" != detect ] && [ "$TOOL" = detect ]; then
+      printf '%s\n' 'Choose a number from 1 through 6.' >&2
+      continue
+    fi
+    return
+  done
 }
 choose_scope() {
-  prompt 'Install globally or into the current project? [g/p] '
+  prompt 'Install globally or into the current project? [G/p] '
   read_tty choice || fail 'Could not read the install scope from the terminal.'
+  [ -n "$choice" ] || choice=G
   case "$choice" in
     g|G|global) SCOPE=global ;;
-    p|P|project) SCOPE=project; TARGET=$(pwd) ;;
+    p|P|project)
+      SCOPE=project
+      TARGET=$(pwd)
+      printf 'Project target: %s\n' "$TARGET" > /dev/tty ;;
     *) fail 'Choose global (g) or project (p).' ;;
   esac
 }
@@ -55,7 +68,7 @@ detect_tools() {
   command -v grok >/dev/null 2>&1 && detected="$detected grok"
   command -v agy >/dev/null 2>&1 && detected="$detected antigravity"
   DETECTED_TOOLS=${detected# }
-  [ -n "$DETECTED_TOOLS" ] || fail 'No supported assistants were detected. Select one explicitly with --tool.'
+  [ -n "$DETECTED_TOOLS" ] || return 1
   printf 'Detected assistants: %s\n' "$(color 34 "$DETECTED_TOOLS")" >&2
 }
 
@@ -77,16 +90,21 @@ done
 case "$REF" in ''|-*|*[!A-Za-z0-9._/-]*) fail 'The ref must contain only letters, numbers, ., _, /, or -.' ;; esac
 
 if [ -z "$TOOL" ] && [ -z "$SCOPE" ] && has_tty; then
-  choose_tool
+  choose_tool detect
   choose_scope
   printf '%s\n' "Installing GitHub branch main of $REPOSITORY. To install a tag or commit, rerun with --ref <tag-or-commit>." >&2
+  printf '%s\n' 'Existing toolkit files will be skipped. Use --force to overwrite them.' >&2
+  while [ "$TOOL" = detect ] && ! detect_tools; do
+    printf '%s\n' 'No supported assistants were detected. Select an assistant explicitly.' >&2
+    choose_tool explicit
+  done
 fi
 [ -n "$TOOL" ] || { usage; exit 1; }
 [ -n "$SCOPE" ] || { usage; exit 1; }
 case "$TOOL" in opencode|claude-code|codex|grok|antigravity|all|detect) ;; *) fail 'Invalid --tool value.' ;; esac
 
 if [ "$TOOL" = detect ]; then
-  detect_tools
+  [ -n "$DETECTED_TOOLS" ] || detect_tools || fail 'No supported assistants were detected. Select one explicitly with --tool.'
   if has_tty; then
     prompt 'Install for detected assistants? [y/N] '
     read_tty answer || fail 'Could not read the confirmation from the terminal.'

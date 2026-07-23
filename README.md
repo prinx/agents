@@ -22,7 +22,7 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 
 This does not leave `install.sh` in your current folder. The installer also removes its temporary download files.
 
-With no scope or tool flags, it presents this numbered menu:
+With no scope or tool flags, it presents this numbered menu. Press Enter to detect installed assistants automatically (choice 7).
 
 1. OpenCode
 2. Claude Code
@@ -32,7 +32,7 @@ With no scope or tool flags, it presents this numbered menu:
 6. All supported assistants
 7. Detect installed assistants automatically
 
-It then asks whether to install globally or into the current project. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation; it fails if no supported assistant is found.
+It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
 
 For OpenCode, you can choose the scope directly:
 
@@ -52,7 +52,7 @@ sh "$tmp" --project .
 rm -f "$tmp"
 ```
 
-Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. Use `--no-color` to disable terminal colors; colors are also disabled for non-terminal output and when `NO_COLOR` is set. The installer ends with a file summary listing installed, skipped, and overwritten paths. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
+Interactive installs use `main` and state that `--ref` selects a tag or commit. Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. Use `--no-color` to disable terminal colors; colors are also disabled for non-terminal output and when `NO_COLOR` is set. The installer ends with a file summary listing installed, skipped, and overwritten paths. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
 
 To replace an existing OpenCode configuration deliberately:
 
