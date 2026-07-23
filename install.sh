@@ -139,7 +139,17 @@ run_local_installer() {
   [ -n "$TARGET" ] && set -- "$@" --target "$TARGET"
   [ "$FORCE" = true ] && set -- "$@" --force
   [ "$NO_COLOR_FLAG" = true ] && set -- "$@" --no-color
+  [ "$TOOL" = detect ] && set -- "$@" --suppress-success
   "$TOOLKIT_DIR/scripts/install-local.sh" "$@"
+}
+
+print_success() {
+  printf '%s\n' "$(color 32 'Installation successful.')"
+  if [ "$SCOPE" = project ]; then
+    printf 'Next: start or open your coding assistant from %s.\n' "${TARGET:-"$(pwd)"}"
+  else
+    printf '%s\n' 'Next: restart your coding assistant if it is already open.'
+  fi
 }
 
 if [ "$TOOL" = detect ]; then
@@ -149,3 +159,5 @@ if [ "$TOOL" = detect ]; then
 else
   run_local_installer "$TOOL"
 fi
+
+[ "$TOOL" = detect ] && print_success

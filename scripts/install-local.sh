@@ -8,6 +8,7 @@ SCOPE=
 TARGET=
 FORCE=false
 COLOR=false
+SUPPRESS_SUCCESS=false
 
 if [ -t 1 ] && [ -t 2 ] && [ -z "${NO_COLOR+x}" ]; then COLOR=true; fi
 
@@ -30,6 +31,7 @@ while [ "$#" -gt 0 ]; do
     --target) TARGET=${2:?Missing value for --target.}; shift 2 ;;
     --force|--yes) FORCE=true; shift ;;
     --no-color) COLOR=false; shift ;;
+    --suppress-success) SUPPRESS_SUCCESS=true; shift ;;
     --help|-h) usage; exit 0 ;;
     *) fail "Unsupported bundled-installer argument: $1" ;;
   esac
@@ -189,6 +191,15 @@ print_file_report() {
   done < "$report_file"
 }
 
+print_success() {
+  printf '%s\n' "$(color 32 'Installation successful.')"
+  if [ "$SCOPE" = project ]; then
+    printf 'Next: start or open your coding assistant from %s.\n' "$TARGET"
+  else
+    printf '%s\n' 'Next: restart your coding assistant if it is already open.'
+  fi
+}
+
 if [ "$SCOPE" = project ]; then
   TARGET=${TARGET:-"$(pwd)"}
   [ -d "$TARGET" ] || fail "Target project directory does not exist: $TARGET"
@@ -251,3 +262,4 @@ heading 'Installation file summary:'
 print_file_report 'Installed files:' installed
 print_file_report 'Skipped existing files:' skipped
 print_file_report 'Overwritten files:' overwritten
+[ "$SUPPRESS_SUCCESS" = true ] || print_success
