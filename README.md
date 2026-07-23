@@ -92,6 +92,14 @@ Use this fallback in any tool:
 
 For a bigger project, the orchestrator brings in the planner. The planner asks questions before making a plan when key product facts are missing. Answer the questions and review the plan. The developer and quality roles then work through one feature at a time.
 
+### Ask for a guided project
+
+For more control, ask for guided delivery:
+
+> Help me build this in small milestones. Ask questions first, show me the plan, and pause for my review before and after each milestone.
+
+You can instead ask for autonomous delivery. The assistant still confirms requirements and the plan before building, and asks before deployment.
+
 ### Add a feature
 
 For example:

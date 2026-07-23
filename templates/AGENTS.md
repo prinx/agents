@@ -3,6 +3,7 @@
 - Keep durable project conventions here.
 - Store mutable workflow artifacts in `.agents/artifacts/`.
 - The orchestrator owns `state.md`; planner initializes project memory.
+- Record the selected delivery mode and confirmed material decisions in project memory; do not start a new milestone before the current one is complete and reviewed.
 - Commit `requirements.md`, `plan.md`, `backlog.md`, `project-memory.md`, and this `AGENTS.md`.
 - Do not commit transient `state.md` or `failure-log.md`.
 - Deployment requires an explicit human request and passing quality gates.
