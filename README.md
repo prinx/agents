@@ -1,6 +1,16 @@
 # Engineering Workflow Toolkit
 
-A reusable, artifact-driven engineering workflow for coding assistants. It does not select a model or provider. Big Pickle remains an optional workshop gateway example, not a requirement or endorsement.
+A reusable, artifact-driven engineering workflow for coding assistants.
+
+The toolkit never configures a model. Each installed assistant uses the model/provider already selected by its user. Big Pickle is an optional workshop gateway example, not a default, requirement, or endorsement.
+
+## Why This Workflow
+
+This workflow is grounded in the software development lifecycle (SDLC), the proven way teams generally develop software. AI changes the tools and team structure, but it does not remove the need for clear goals, planning, incremental implementation, quality validation, human accountability, and safe release. Use AI tools to achieve those SDLC goals, and adapt practices when the work calls for it.
+
+Agents act as specialized team members with defined roles and responsibilities. The orchestrator coordinates their handoffs and moves work through the workflow. For large or complex work, it invokes the planner, which clarifies intended outcomes and breaks the goal into small, ordered tasks. The developer implements one task at a time and collaborates with the quality reviewer for validation and review.
+
+Artifacts carry outcomes and decisions between roles. Humans remain in control: they approve requirements and plans, make required decisions, and approve deployment. Deployment skills run only on explicit human request; monitoring is available on demand. Bug fixes and other small bounded changes take a shorter developer-to-quality fast path.
 
 ## Safety Note
 
