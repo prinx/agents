@@ -14,12 +14,15 @@ usage() {
   printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--yes]" >&2
 }
 fail() { printf '%s\n' "$1" >&2; exit 1; }
+has_tty() { ( : </dev/tty ) 2>/dev/null; }
+prompt() { has_tty && printf '%s' "$1" > /dev/tty; }
+read_tty() { has_tty && IFS= read -r "$1" < /dev/tty; }
 
 choose_tool() {
-  printf '%s\n' 'Select coding assistant:' >&2
-  printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 All supported assistants' '7 Detect installed assistants automatically.' >&2
-  printf '%s' 'Choice [1-7]: ' >&2
-  read -r choice
+  printf '%s\n' 'Select coding assistant:' > /dev/tty
+  printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 All supported assistants' '7 Detect installed assistants automatically.' > /dev/tty
+  prompt 'Choice [1-7]: '
+  read_tty choice || fail 'Could not read the tool choice from the terminal.'
   case "$choice" in
     1) TOOL=opencode ;; 2) TOOL=claude-code ;; 3) TOOL=codex ;; 4) TOOL=grok ;;
     5) TOOL=antigravity ;; 6) TOOL=all ;; 7) TOOL=detect ;;
@@ -27,8 +30,8 @@ choose_tool() {
   esac
 }
 choose_scope() {
-  printf '%s' 'Install globally or into the current project? [g/p] ' >&2
-  read -r choice
+  prompt 'Install globally or into the current project? [g/p] '
+  read_tty choice || fail 'Could not read the install scope from the terminal.'
   case "$choice" in
     g|G|global) SCOPE=global ;;
     p|P|project) SCOPE=project; TARGET=$(pwd) ;;
@@ -63,7 +66,7 @@ done
 
 case "$REF" in ''|-*|*[!A-Za-z0-9._/-]*) fail 'The ref must contain only letters, numbers, ., _, /, or -.' ;; esac
 
-if [ -z "$TOOL" ] && [ -z "$SCOPE" ] && [ -t 0 ]; then
+if [ -z "$TOOL" ] && [ -z "$SCOPE" ] && has_tty; then
   choose_tool
   choose_scope
   printf '%s\n' "Installing GitHub branch main of $REPOSITORY. To install a tag or commit, rerun with --ref <tag-or-commit>." >&2
@@ -74,16 +77,16 @@ case "$TOOL" in opencode|claude-code|codex|grok|antigravity|all|detect) ;; *) fa
 
 if [ "$TOOL" = detect ]; then
   detect_tools
-  if [ "$YES" = false ] && [ -t 0 ]; then
-    printf 'Install for detected assistants? [y/N] ' >&2
-    read -r answer
+  if [ "$YES" = false ] && has_tty; then
+    prompt 'Install for detected assistants? [y/N] '
+    read_tty answer || fail 'Could not read the confirmation from the terminal.'
     [ "$answer" = y ] || [ "$answer" = Y ] || exit 0
   fi
 fi
 if [ "$TOOL" = all ] && [ "$SCOPE" = global ] && [ "$YES" = false ]; then
-  if [ ! -t 0 ]; then fail 'Global installation for all assistants requires --yes outside a terminal.'; fi
-  printf '%s' 'Install global configuration for all supported assistants? [y/N] ' >&2
-  read -r answer
+  if ! has_tty; then fail 'Global installation for all assistants requires --yes outside a terminal.'; fi
+  prompt 'Install global configuration for all supported assistants? [y/N] '
+  read_tty answer || fail 'Could not read the confirmation from the terminal.'
   [ "$answer" = y ] || [ "$answer" = Y ] || exit 0
 fi
 

@@ -9,6 +9,9 @@ TARGET=
 YES=false
 
 fail() { printf '%s\n' "$1" >&2; exit 1; }
+has_tty() { ( : </dev/tty ) 2>/dev/null; }
+prompt() { has_tty && printf '%s' "$1" > /dev/tty; }
+read_tty() { has_tty && IFS= read -r "$1" < /dev/tty; }
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -27,12 +30,12 @@ confirm_overwrite() {
   destination=$1
   [ ! -e "$destination" ] && return 0
   [ "$YES" = true ] && return 0
-  if [ ! -t 0 ]; then
+  if ! has_tty; then
     printf 'Refusing to overwrite existing %s without --yes.\n' "$destination" >&2
     return 1
   fi
-  printf 'Overwrite %s? [y/N] ' "$destination" >&2
-  read -r answer
+  prompt "Overwrite $destination? [y/N] "
+  read_tty answer || return 1
   [ "$answer" = y ] || [ "$answer" = Y ]
 }
 
