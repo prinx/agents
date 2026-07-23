@@ -77,6 +77,46 @@ Existing files are preserved unless you confirm each overwrite or pass `--yes`. 
 sh install.sh --ref <tag-or-commit> --tool codex --project .
 ```
 
+## How to use the workflow
+
+Start in your bootstrapped project and describe the outcome you want. The exact wording and invocation depend on the installed assistant adapter: in tools that support direct agent mentions, mention `@orchestrator`; in tools that let you choose a primary agent, select the orchestrator and state the goal.
+
+### Build a new project
+
+For example, tell your coding assistant:
+
+> I want to develop a link shortener web app. Use the orchestrator to help me build it.
+
+For a substantial new project, the orchestrator selects the planner. The planner asks clarifying questions, then produces requirements, a plan, and a backlog. Answer its questions and review the approval gates. The developer and quality roles then complete and validate tickets one at a time.
+
+### Fix a bug
+
+For example:
+
+> The shortened link redirects to a 404 page for some users. Use the workflow to investigate and fix it.
+
+A bounded issue normally takes the fast path: developer, then quality. The planner is skipped when it is not needed.
+
+### Add a feature
+
+For example:
+
+> Add custom aliases so users can choose the short code for a link.
+
+The orchestrator decides whether the scope and risk fit the small-change fast path or need the planner and full planning. Work then proceeds ticket by ticket.
+
+### Deploy and monitor
+
+Deployment is explicit. For example:
+
+> Deploy the approved link shortener to Vercel.
+
+The toolkit includes a generic deployment workflow and, today, only a Vercel implementation (`deploy-vercel`). It does not deploy automatically. Add provider or infrastructure skills that match your environment, such as Netlify, Cloudflare, AWS, Docker, or Kubernetes.
+
+Ask for monitoring when you need it, for example:
+
+> Check production health for the link shortener.
+
 ## Artifact And Git Policy
 
 Commit adapters and durable workflow artifacts: `AGENTS.md`, `requirements.md`, `plan.md`, `backlog.md`, and `project-memory.md`. `.gitignore` ignores transient `.agents/artifacts/state.md` and `failure-log.md`.
