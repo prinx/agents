@@ -168,6 +168,12 @@ Before implementation, the developer role and `branch-safely` skill check whethe
 
 An AI gateway may retain submitted code or use it for training, depending on its terms and settings. Do not submit sensitive, proprietary, regulated, or credential-bearing code unless the selected service and your organization explicitly permit it.
 
+### Tool approvals
+
+The toolkit lets developer and quality agents inspect the project, use normal non-force branch commands, stage changes, run known local checks, and list Docker containers or images without repeated approval. It asks before commits, remote Git work, destructive actions, sensitive Docker commands, external-system actions that were not requested, and all deployments.
+
+Agents must ask before reading, searching, or scanning credential-bearing paths, including `.env`, `.env.*`, `.secrets`, `*.secrets`, `*.pem`, `*.key`, credential-named files or folders, `secrets/`, `.ssh/`, and `.aws/`. Approved access is only for the minimum needed work; agents must never print or include secrets in output, logs, or artifacts.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

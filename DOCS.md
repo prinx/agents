@@ -87,13 +87,13 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 
 | Tool | Global installation | Project installation |
 | --- | --- | --- |
-| OpenCode | `${XDG_CONFIG_HOME:-~/.config}/opencode/agents`, `${XDG_CONFIG_HOME:-~/.config}/opencode/skills`, `~/.agents/{skills,playbooks,templates}` | `.opencode/{agents,skills}`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
-| Claude Code | `~/.claude/{agents,skills}`, `~/.agents/{skills,playbooks,templates}` | `.claude/{agents,skills}`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md`, `CLAUDE.md` |
+| OpenCode | `${XDG_CONFIG_HOME:-~/.config}/opencode/{opencode.json,agents,skills}`, `~/.agents/{skills,playbooks,templates}` | `.opencode/{opencode.json,agents,skills}`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
+| Claude Code | `~/.claude/{settings.json,agents,skills}`, `~/.agents/{skills,playbooks,templates}` | `.claude/{settings.json,agents,skills}`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md`, `CLAUDE.md` |
 | Codex | `~/.codex/agents`, `~/.agents/{skills,playbooks,templates}` | `.codex/agents`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
 | Grok Build | `~/.grok/{agents,skills}`, `~/.agents/{skills,playbooks,templates}` | `.grok/{agents,skills}`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
 | Antigravity | `~/.gemini/config/skills`, `~/.agents/{skills,playbooks,templates}` | `.agents/{skills,playbooks,templates,artifacts,rules,workflows}`, `AGENTS.md` |
 
-The global OpenCode install does not write its user preference file, `opencode.json`.
+The installer supplies an `opencode.json` policy file and a Claude Code `settings.json` policy file. Existing configuration files are skipped unless you use `--force`.
 
 ## Replace existing files: `--force`
 
@@ -278,6 +278,12 @@ Every project install writes `AGENTS.md`, which contains shared project instruct
 Before implementation, the workflow checks Git status and branch. It preserves unrelated work and uses a task branch instead of changing an existing repository's `main` or `master` branch. For a non-Git directory, it asks before initialization; if the human is unsure or requests the default, it uses `git init -b main`.
 
 The workflow does not set global Git identity and does not create a commit without an explicit human request. After a human-requested baseline commit in a new repository, normal task-branch policy applies.
+
+### Tool and secret policy
+
+Developer and quality agents can inspect project files, use normal non-force branch commands, stage changes, run known local test/lint/build/dev commands, and list Docker containers or images without repeated approval. They ask before commits, remote Git operations, merges, rebases, resets, restores, cleans, force switches, branch deletions, destructive filesystem work, sensitive Docker operations, external-system actions that were not explicitly requested, and deployment.
+
+Protected paths require approval before reading, searching, or scanning: `.env`, `.env.*`, `.secrets`, `*.secrets`, `*.pem`, `*.key`, credential-named files or folders, `secrets/`, `.ssh/`, `.aws/`, and similar credential locations. Agents never print, copy, log, or include secrets in artifacts or responses. Planner stays read-focused and the orchestrator does not run arbitrary shell commands.
 
 ## Troubleshooting
 

@@ -84,11 +84,13 @@ install_shared_global() {
 
 install_opencode() {
   base=$1
+  copy_file "$TOOLKIT_DIR/adapters/opencode/opencode.json" "$base/opencode.json"
   copy_tree_files "$TOOLKIT_DIR/adapters/opencode/agents" "$base/agents"
   copy_tree_files "$TOOLKIT_DIR/skills" "$base/skills"
 }
 install_claude() {
   base=$1
+  copy_file "$TOOLKIT_DIR/adapters/claude-code/settings.json" "$base/settings.json"
   copy_tree_files "$TOOLKIT_DIR/adapters/claude-code/agents" "$base/agents"
   copy_tree_files "$TOOLKIT_DIR/skills" "$base/skills"
 }
