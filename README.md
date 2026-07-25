@@ -108,7 +108,7 @@ For more control, ask for guided/checkpointed delivery:
 
 > Help me build this in small milestones. Ask questions first, show me the plan, and pause for my review before and after each milestone.
 
-You can instead explicitly ask for autonomous delivery. It still requires first-plan approval and explicit deployment approval. For user-facing features, the developer uses the included `ui-ux` skill to keep UI clear, accessible, responsive, and consistent without inventing a design system.
+You can instead explicitly ask for autonomous delivery. It still requires first-plan approval and explicit deployment approval. For user-facing features, the developer first uses [Anthropic's `frontend-design` skill](https://github.com/anthropics/skills/tree/main/skills/frontend-design) when you have it installed; otherwise it uses the included `ui-ux` fallback. Neither path adds decorative complexity or a new design system unless you ask: UI stays within approved scope and existing product conventions while remaining accessible, responsive, simple, polished, and intentional. `frontend-design` is externally owned and is not bundled or installed by this toolkit.
 
 ### Add a feature
 

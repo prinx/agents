@@ -248,7 +248,7 @@ After every completed user-facing feature, the orchestrator gives you the simple
 
 ### UI/UX
 
-For user-facing work, developer uses the portable `ui-ux` skill. It preserves existing app conventions and focuses on clear labels and feedback, semantic and keyboard-accessible UI, visible focus, contrast, responsive behavior, and only the states the feature needs. It avoids over-design and does not invent a design system.
+For user-facing work, developer first uses [Anthropic's `frontend-design` skill](https://github.com/anthropics/skills/tree/main/skills/frontend-design) when it is installed. Otherwise, developer uses the included `ui-ux` fallback. Both preserve existing app conventions and approved scope, prioritize clear labels and feedback, semantic and keyboard-accessible UI, visible focus, contrast, responsive behavior, and only the states the feature needs. A simple UI can still be polished and intentional; neither path adds decorative complexity or a new design system unless requested. `frontend-design` is externally owned and is not bundled or installed by this toolkit.
 
 ### Deploy explicitly
 
