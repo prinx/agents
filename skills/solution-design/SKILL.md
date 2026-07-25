@@ -5,4 +5,4 @@ description: Use when translating approved requirements into a solution design, 
 
 # Solution Design
 
-Prefer the smallest design consistent with requirements and existing architecture. Document interfaces, data implications, alternatives, tradeoffs, risks, milestones, and a proportionate test strategy in `plan.md`. Escalate unresolved irreversible decisions.
+Prefer the smallest design consistent with the approved first feature and existing architecture. Propose a simple stack and lightweight implementation plan only for that feature, with necessary interfaces, data implications, risks, tradeoffs, and proportionate test strategy in `plan.md`. Keep future ideas short and non-binding. Do not add infrastructure, services, abstractions, or modules unless required. Escalate unresolved irreversible, security, cost, privacy, or credential decisions.

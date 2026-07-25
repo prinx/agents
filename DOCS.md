@@ -158,6 +158,14 @@ The bootstrap script only downloads and extracts the selected archive. The bundl
 
 Open the assistant in the project, then describe the work. If you installed globally, restart an assistant that was already open so it can load the new configuration.
 
+## Delivery modes
+
+`prototype-first` is the default. The planner runs a short interview for the goal, intended users, constraints, smallest useful first result, and success criteria. It proposes a simple stack and lightweight plan for that first feature only. After you explicitly approve that plan, developer and quality work through it without routine confirmations to reach a testable prototype.
+
+The workflow asks for approval only when it cannot safely decide: the first-feature plan, a material scope or goal change, security/cost/privacy/credential decisions, destructive or remote actions, deployment, or a checkpoint you explicitly requested. It does not ask for routine implementation choices. When uncertain, it chooses a simple reversible option and notes it briefly.
+
+Guided/checkpointed delivery is available when you explicitly ask to pause for review at milestones. Autonomous delivery is also opt-in. Neither mode removes first-plan approval or explicit deployment approval.
+
 ### OpenCode
 
 Select or switch to `orchestrator` as the primary agent, then state your goal. OpenCode supports switching primary agents in a session.
@@ -200,7 +208,7 @@ Start with a plain goal.
 I want to build a link shortener web app. Use the orchestrator to coordinate the work.
 ```
 
-For a larger project, the planner asks for missing product details. Answer those questions, review requirements and the plan, then approve implementation.
+The planner asks only the questions needed for the smallest valuable first feature. Answer those questions, review its simple plan, then approve implementation. Future ideas may be recorded briefly but are not an approved roadmap.
 
 For milestone checkpoints, ask:
 
@@ -208,7 +216,7 @@ For milestone checkpoints, ask:
 Help me build this in small milestones. Ask questions first, show me the plan, and pause for my review before and after each milestone.
 ```
 
-You can ask for autonomous delivery. Requirements and the plan still need explicit approval before implementation.
+You can ask for autonomous delivery. The first-feature plan still needs explicit approval before implementation.
 
 ### Add a feature
 
@@ -235,6 +243,12 @@ Review and approve requirements and plans before implementation. Quality records
 Quality derives safe local test steps from the repository and writes `.agents/artifacts/local-test.md`. It records setup, commands actually run and their results, how to start the app, a known URL or port when available, manual acceptance steps, cleanup, and limitations. For libraries, CLIs, and APIs, it records an appropriate command and verified usage or smoke test.
 
 Quality cannot give final user-facing `PASS` without a usable local test path. It reports `BLOCKED` or `PASS_WITH_NOTES` when something is missing.
+
+After every completed user-facing feature, the orchestrator gives you the simplest actual way to test it: the local URL when quality started and verified a server, otherwise exact commands and short steps. It then asks whether you want to test, fix, adjust, or start the next feature. It does not automatically plan or build the next major feature unless you explicitly selected autonomous delivery.
+
+### UI/UX
+
+For user-facing work, developer uses the portable `ui-ux` skill. It preserves existing app conventions and focuses on clear labels and feedback, semantic and keyboard-accessible UI, visible focus, contrast, responsive behavior, and only the states the feature needs. It avoids over-design and does not invent a design system.
 
 ### Deploy explicitly
 

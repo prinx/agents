@@ -1,13 +1,15 @@
 # Plan
 
-## Proposed solution
+## First feature / prototype
 
-## Architecture and interfaces
+Smallest user-facing result and acceptance criteria.
 
-## Risks and tradeoffs
+## Simple stack and implementation
 
-## Test strategy
+Only the technology, interfaces, and steps required for this feature.
 
-## Milestones
+## Risks, tradeoffs, and test strategy
 
-For each milestone (bucket), record: goal, included ticket IDs, acceptance criteria, dependencies or risks, expected review point, and completion status.
+## Future ideas (non-binding)
+
+Keep this list short. Do not turn it into a roadmap or implementation backlog.

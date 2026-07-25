@@ -1,9 +1,9 @@
 # New Feature Playbook
 
-1. Orchestrator classifies the request as full path and records state.
-2. Planner creates or updates requirements, plan, backlog, and project memory; orchestrator relays any question batch to the human.
-3. At planning approval, human resolves material decisions and selects checkpointed or autonomous delivery if not already stated; orchestrator records the choice.
-4. Before each milestone, orchestrator checks it against requirements and confirmed decisions. In checkpointed delivery, the human reviews before it starts.
-5. Developer implements one ready ticket test-first and gives quality discovered local-test evidence. Quality writes `local-test.md`, QA `PASS`, `FAIL`, `BLOCKED`, or `PASS_WITH_NOTES`, and review `APPROVE` or `REQUEST CHANGES`.
-6. Orchestrator updates backlog, memory, and state. At each completed user-facing milestone, summarize the exact local commands and URL from `local-test.md` to the human; do not call `BLOCKED` or `PASS_WITH_NOTES` work fully complete. Complete and review the milestone before starting the next; in checkpointed delivery, the human reviews the completed milestone.
-7. Update documentation only at a meaningful milestone. Deploy only on explicit human request after both quality gates pass.
+1. Orchestrator records `prototype-first` delivery unless the human explicitly requests guided/checkpointed or autonomous delivery.
+2. Planner asks only the short questions needed to establish goal, users, constraints, smallest useful first result, and success criteria.
+3. Planner creates proposed first-feature requirements, a simple stack, lightweight plan, small backlog, and optional short future-ideas list. The human explicitly approves this first-feature plan.
+4. Developer implements the approved first feature test-first without routine confirmations. For user-facing work, use `ui-ux`; choose the smallest working solution and avoid unnecessary infrastructure or abstractions.
+5. Quality writes `local-test.md`, QA `PASS`, `FAIL`, `BLOCKED`, or `PASS_WITH_NOTES`, and review `APPROVE` or `REQUEST CHANGES`. It gives the simplest evidence-based test path: a local URL when known, otherwise exact commands and short steps.
+6. Orchestrator updates backlog, memory, and state, gives the local test handoff, and asks whether the human wants to test, fix, adjust, or start the next feature. Do not automatically plan or build the next major feature unless autonomous mode was explicitly selected.
+7. Pause for approval only for a material scope/goal change; security, cost, privacy, credential, destructive, remote, or deployment decision; or an explicit user-requested checkpoint. Deploy only on explicit human request after both quality gates pass.

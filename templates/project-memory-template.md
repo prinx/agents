@@ -2,7 +2,7 @@
 
 ## Product and users
 
-### Original goal and success criteria
+### Original goal, first feature, and success criteria
 
 ## Stack and architecture
 
@@ -12,7 +12,11 @@ Record confirmed scope, value, stack, architecture, security, cost, and mileston
 
 ## Delivery mode
 
-Checkpointed or autonomous, plus any agreed review cadence.
+`prototype-first` by default. Record guided/checkpointed or autonomous only when explicitly selected, plus any agreed review cadence.
+
+## Future ideas
+
+Short non-binding list; do not treat it as an approved roadmap.
 
 ## Conventions
 

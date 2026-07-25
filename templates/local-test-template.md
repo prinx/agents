@@ -18,6 +18,10 @@ Exact commands actually run and their results.
 
 Exact start command and known local URL or port, if applicable.
 
+## Simplest test path
+
+State the local URL when a server was started and known; otherwise give exact commands and short steps.
+
 ## Manual checks
 
 Short steps mapped to the acceptance criteria.

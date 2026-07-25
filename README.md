@@ -10,15 +10,15 @@ This toolkit uses AI agents to help with those steps. Each agent has a role, lik
 
 - You send requests to the orchestrator.
 - The orchestrator guides the work and gives tasks to other agents when needed.
-- The planner asks questions first, then creates requirements, architecture, and an implementation plan.
-- The developer builds one feature at a time following the plan.
+- The planner asks only the questions needed to define the smallest useful first feature, then proposes a simple stack and lightweight plan.
+- The developer builds that first feature into a testable prototype without routine approval stops.
 - The quality reviewer checks that each feature meets its acceptance criteria and works as expected.
 - You approve important decisions, review plans, test locally, and choose when to deploy.
 - Agents keep work organized, but you remain in control.
 
 ### Interaction style
 
-Human-facing updates use plain language and stay short: current status, the few important decisions or risks, and the next action. After planning, the orchestrator summarizes the proposed requirements, plan, and backlog, then waits for explicit approval before implementation in both checkpointed and autonomous delivery. It never treats silence as approval. Detailed test and review evidence stays in artifacts unless you ask to see it. At completed user-facing work, the orchestrator gives you the exact local test commands and URL from the quality-owned local-test artifact, followed by the next action.
+Human-facing updates use plain language and stay short. The default is **prototype-first**: approve the first-feature plan once, then the agents build and test it without routine confirmations. You still approve material scope/goal changes, security/cost/privacy/credential choices, destructive or remote actions, deployment, and any checkpoint you explicitly request. At completed user-facing work, the orchestrator gives the exact local URL when known, otherwise commands and short steps from the quality-owned local-test artifact, then asks whether you want to test, fix, adjust, or start the next feature.
 
 ## Install
 
@@ -100,15 +100,15 @@ Use this fallback in any tool:
 
 > I want to build a link shortener web app. Use the orchestrator to coordinate the work.
 
-For a bigger project, the orchestrator brings in the planner. The planner asks questions before making a plan when key product facts are missing. Answer the questions and review the plan. The developer and quality roles then work through one feature at a time.
+The planner asks only for the goal, users, constraints, and smallest useful first result. Review and approve that first-feature plan. The developer and quality roles then get to a testable prototype quickly. Future ideas stay non-binding until you choose the next feature.
 
 ### Ask for a guided project
 
-For more control, ask for guided delivery:
+For more control, ask for guided/checkpointed delivery:
 
 > Help me build this in small milestones. Ask questions first, show me the plan, and pause for my review before and after each milestone.
 
-You can instead ask for autonomous delivery. The assistant still confirms requirements and the plan before building, and asks before deployment.
+You can instead explicitly ask for autonomous delivery. It still requires first-plan approval and explicit deployment approval. For user-facing features, the developer uses the included `ui-ux` skill to keep UI clear, accessible, responsive, and consistent without inventing a design system.
 
 ### Add a feature
 

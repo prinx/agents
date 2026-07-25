@@ -2,7 +2,7 @@
 
 ## Problem and users
 
-## Scope
+## First feature scope
 
 ## Non-goals
 
@@ -11,3 +11,5 @@
 ## Constraints and assumptions
 
 ## Open decisions
+
+## Future ideas (non-binding)
