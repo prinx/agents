@@ -22,6 +22,7 @@ With no flags, the installer shows a numbered assistant menu.
 - Choose project installation to use the current directory. The installer shows that target directory.
 - The default source is the `main` branch. Use `--ref` to select a tag or commit.
 - Existing toolkit files are skipped by default. Use `--force` to replace them.
+- After assistant and scope selection, the installer asks `Install the optional frontend-design skill for UI work? [y/N]`. Enter selects No. It briefly identifies this as an external Anthropic skill installed through skills.sh.
 
 If detection finds nothing, the interactive installer asks you to select an assistant explicitly.
 
@@ -63,6 +64,29 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 ```
 
 `--tool all --global` requires an interactive confirmation because it writes configuration for every assistant. `--tool detect` reports detected assistants and asks for confirmation when a terminal is available.
+
+## Optional UI skill: `--with-frontend-design`
+
+The toolkit includes `ui-ux` as its built-in fallback. For user-facing work, agents prefer Anthropic's external [`frontend-design`](https://github.com/anthropics/skills/tree/2235be7c60b551f5de82ade908fd3816455afcda/skills/frontend-design) skill when available, and otherwise use `ui-ux`.
+
+The optional skill is never installed by default. In the fully interactive flow, answer `y` to `Install the optional frontend-design skill for UI work? [y/N]`; any other answer, including Enter, declines it. For scripts or CI, pass `--with-frontend-design`:
+
+```sh
+# Install the toolkit and the optional skill in this project for OpenCode.
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --project . --with-frontend-design
+
+# Install it globally for Claude Code.
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool claude-code --global --with-frontend-design
+
+# Install it for every supported assistant in a project.
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool all --project . --with-frontend-design
+```
+
+The installer invokes the documented skills.sh command with `--skill frontend-design`, `--agent` for the selected assistant targets, `--global` for global installs, and `--yes` to avoid a second prompt. skills.sh supports the toolkit targets `opencode`, `claude-code`, `codex`, `grok`, and `antigravity`; `all` passes all five names, while `detect` installs only to the assistants detected by this installer. If skills.sh ever rejects a target, the installer reports that the external skill was not installed and does not report overall success.
+
+The source is external, is not vendored into this repository, and is pinned to Anthropic commit `2235be7c60b551f5de82ade908fd3816455afcda`. Anthropic licenses the skill under Apache-2.0; its files and notices remain with the external installation. Review the upstream source and skills.sh's security posture before opting in. skills.sh records the external source URL, pinned ref, skill path, and folder hash in its own `.skill-lock.json` (`$XDG_STATE_HOME/skills/.skill-lock.json`, or `~/.agents/.skill-lock.json`); this toolkit does not create or modify that lockfile itself.
+
+This optional step needs Node.js and `npx`. If either is unavailable, or the external command fails, the toolkit files may already be installed but the command exits with a clear optional-skill failure and no `Installation successful` message. Install Node.js or resolve the skills.sh error, then rerun with `--with-frontend-design`; until then, the built-in `ui-ux` fallback remains available.
 
 ## Scope: `--global` and `--project`
 

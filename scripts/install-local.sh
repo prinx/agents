@@ -7,6 +7,7 @@ TOOL=
 SCOPE=
 TARGET=
 FORCE=false
+WITH_FRONTEND_DESIGN=false
 COLOR=false
 SUPPRESS_SUCCESS=false
 
@@ -18,7 +19,7 @@ color() {
 heading() { printf '%s\n' "$(color '1;34' "$1")"; }
 fail() { printf '%s\n' "$(color 31 "$1")" >&2; exit 1; }
 usage() {
-  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|all --scope global|project [--target <directory>] [--force] [--no-color]" >&2
+  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|all --scope global|project [--target <directory>] [--force] [--with-frontend-design] [--no-color]" >&2
   printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
 REPORT_DIR=$(mktemp -d "${TMPDIR:-/tmp}/workflow-toolkit-report.XXXXXX") || fail 'Could not create an installation report directory.'
@@ -30,6 +31,7 @@ while [ "$#" -gt 0 ]; do
     --scope) SCOPE=${2:?Missing value for --scope.}; shift 2 ;;
     --target) TARGET=${2:?Missing value for --target.}; shift 2 ;;
     --force|--yes) FORCE=true; shift ;;
+    --with-frontend-design) WITH_FRONTEND_DESIGN=true; shift ;;
     --no-color) COLOR=false; shift ;;
     --suppress-success) SUPPRESS_SUCCESS=true; shift ;;
     --help|-h) usage; exit 0 ;;
@@ -202,6 +204,28 @@ print_success() {
   fi
 }
 
+install_frontend_design() {
+  [ "$WITH_FRONTEND_DESIGN" = true ] || return 0
+
+  command -v node >/dev/null 2>&1 || fail 'The optional frontend-design skill was not installed: Node.js is required. Install Node.js (which provides npx) and rerun with --with-frontend-design.'
+  command -v npx >/dev/null 2>&1 || fail 'The optional frontend-design skill was not installed: npx is required. Install a Node.js distribution that provides npx and rerun with --with-frontend-design.'
+
+  set -- npx skills add https://github.com/anthropics/skills/tree/2235be7c60b551f5de82ade908fd3816455afcda/skills/frontend-design --skill frontend-design --yes
+  [ "$SCOPE" = global ] && set -- "$@" --global
+  case "$TOOL" in
+    opencode|claude-code|codex|grok|antigravity) set -- "$@" --agent "$TOOL" ;;
+    all) set -- "$@" --agent opencode --agent claude-code --agent codex --agent grok --agent antigravity ;;
+    *) fail "skills.sh does not support frontend-design installation for toolkit target: $TOOL" ;;
+  esac
+
+  heading 'Installing optional Anthropic frontend-design skill via skills.sh...'
+  if [ "$SCOPE" = project ]; then
+    (cd "$TARGET" && "$@") || fail 'The optional frontend-design skill was not installed. The toolkit installation completed; fix the error above and rerun with --with-frontend-design.'
+  else
+    "$@" || fail 'The optional frontend-design skill was not installed. The toolkit installation completed; fix the error above and rerun with --with-frontend-design.'
+  fi
+}
+
 if [ "$SCOPE" = project ]; then
   TARGET=${TARGET:-"$(pwd)"}
   [ -d "$TARGET" ] || fail "Target project directory does not exist: $TARGET"
@@ -259,6 +283,8 @@ else
       print_antigravity_locations "$HOME/.agents" '' '' '' "$HOME/.gemini/config/skills" ;;
   esac
 fi
+
+install_frontend_design
 
 heading 'Installation file summary:'
 print_file_report 'Installed files:' installed

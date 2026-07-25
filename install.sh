@@ -8,6 +8,7 @@ TOOL=
 SCOPE=
 TARGET=
 FORCE=false
+WITH_FRONTEND_DESIGN=false
 NO_COLOR_FLAG=false
 DETECTED_TOOLS=
 COLOR=false
@@ -15,7 +16,7 @@ COLOR=false
 if [ -t 1 ] && [ -t 2 ] && [ -z "${NO_COLOR+x}" ]; then COLOR=true; fi
 
 usage() {
-  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--force] [--no-color]" >&2
+  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|all|detect] (--global | --project [target]) [--force] [--with-frontend-design] [--no-color]" >&2
   printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
 color() {
@@ -60,6 +61,12 @@ choose_scope() {
     *) fail 'Choose global (g) or project (p).' ;;
   esac
 }
+choose_frontend_design() {
+  printf '%s\n' 'Optional frontend-design comes from Anthropic via skills.sh; it is not bundled with this toolkit.' > /dev/tty
+  prompt 'Install the optional frontend-design skill for UI work? [y/N] '
+  read_tty answer || fail 'Could not read the frontend-design choice from the terminal.'
+  case "$answer" in y|Y) WITH_FRONTEND_DESIGN=true ;; esac
+}
 detect_tools() {
   detected=
   command -v opencode >/dev/null 2>&1 && detected="$detected opencode"
@@ -81,6 +88,7 @@ while [ "$#" -gt 0 ]; do
       [ -z "$SCOPE" ] || fail 'Choose only one install scope.'; SCOPE=project; shift
       if [ "$#" -gt 0 ] && [ "${1#--}" = "$1" ]; then TARGET=$1; shift; fi ;;
     --force|--yes) FORCE=true; shift ;;
+    --with-frontend-design) WITH_FRONTEND_DESIGN=true; shift ;;
     --no-color) NO_COLOR_FLAG=true; COLOR=false; shift ;;
     --help|-h) usage; exit 0 ;;
     *) fail "Unsupported argument: $1" ;;
@@ -92,6 +100,7 @@ case "$REF" in ''|-*|*[!A-Za-z0-9._/-]*) fail 'The ref must contain only letters
 if [ -z "$TOOL" ] && [ -z "$SCOPE" ] && has_tty; then
   choose_tool detect
   choose_scope
+  choose_frontend_design
   printf '%s\n' "Installing GitHub branch main of $REPOSITORY. To install a tag or commit, rerun with --ref <tag-or-commit>." >&2
   printf '%s\n' 'Existing toolkit files will be skipped. Use --force to overwrite them.' >&2
   while [ "$TOOL" = detect ] && ! detect_tools; do
@@ -138,6 +147,7 @@ run_local_installer() {
   set -- --tool "$selected_tool" --scope "$SCOPE"
   [ -n "$TARGET" ] && set -- "$@" --target "$TARGET"
   [ "$FORCE" = true ] && set -- "$@" --force
+  [ "$WITH_FRONTEND_DESIGN" = true ] && set -- "$@" --with-frontend-design
   [ "$NO_COLOR_FLAG" = true ] && set -- "$@" --no-color
   [ "$TOOL" = detect ] && set -- "$@" --suppress-success
   "$TOOLKIT_DIR/scripts/install-local.sh" "$@"

@@ -40,7 +40,7 @@ With no scope or tool flags, it presents this numbered menu. Press Enter to dete
 6. All supported assistants
 7. Detect installed assistants automatically
 
-It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
+It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. Next, it offers Anthropic's external `frontend-design` skill through skills.sh; press Enter for No. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
 
 For OpenCode, you can choose the scope directly:
 
@@ -48,6 +48,9 @@ For OpenCode, you can choose the scope directly:
 curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --global
 
 curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --project .
+
+# Also install Anthropic's optional external UI skill.
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool opencode --project . --with-frontend-design
 ```
 
 `curl | sh` is convenient. Inspect the source first, or use a temporary file if you want to review it before running it:
@@ -60,7 +63,7 @@ sh "$tmp" --project .
 rm -f "$tmp"
 ```
 
-Interactive installs use `main` and state that `--ref` selects a tag or commit. Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. Use `--no-color` to disable terminal colors; colors are also disabled for non-terminal output and when `NO_COLOR` is set. The installer ends with a file summary listing installed, skipped, and overwritten paths, followed by a success message and next action. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
+Interactive installs use `main` and state that `--ref` selects a tag or commit. Existing toolkit files are skipped by default, without per-file prompts. Use `--force` to overwrite all selected toolkit files in one run; `--yes` remains a backwards-compatible alias for `--force`. Use `--with-frontend-design` to opt in non-interactively to Anthropic's external UI skill; it requires Node.js and `npx`. Use `--no-color` to disable terminal colors; colors are also disabled for non-terminal output and when `NO_COLOR` is set. The installer ends with a file summary listing installed, skipped, and overwritten paths, followed by a success message and next action. `--force` affects files only: global installation for `all` still requires its high-level confirmation. After installation, the installer prints the absolute locations for each installed tool. Paths are quoted by the scripts. The downloaded bootstrap script performs only archive download/extraction; the archive's local bundled installer performs the actual copy.
 
 To replace an existing OpenCode configuration deliberately:
 
