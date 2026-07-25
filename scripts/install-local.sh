@@ -210,7 +210,7 @@ install_frontend_design() {
   command -v node >/dev/null 2>&1 || fail 'The optional frontend-design skill was not installed: Node.js is required. Install Node.js (which provides npx) and rerun with --with-frontend-design.'
   command -v npx >/dev/null 2>&1 || fail 'The optional frontend-design skill was not installed: npx is required. Install a Node.js distribution that provides npx and rerun with --with-frontend-design.'
 
-  set -- npx skills add https://github.com/anthropics/skills/tree/2235be7c60b551f5de82ade908fd3816455afcda/skills/frontend-design --skill frontend-design --yes
+  set -- npx skills add anthropics/skills --skill frontend-design --yes
   [ "$SCOPE" = global ] && set -- "$@" --global
   case "$TOOL" in
     opencode|claude-code|codex|grok|antigravity) set -- "$@" --agent "$TOOL" ;;
@@ -224,6 +224,7 @@ install_frontend_design() {
   else
     "$@" || fail 'The optional frontend-design skill was not installed. The toolkit installation completed; fix the error above and rerun with --with-frontend-design.'
   fi
+  printf '%s\n' "$(color 32 'Optional Anthropic frontend-design skill installed successfully.')"
 }
 
 if [ "$SCOPE" = project ]; then
