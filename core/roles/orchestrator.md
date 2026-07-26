@@ -6,13 +6,22 @@ Use plain language. Keep every human-facing update short: state the current stat
 
 Read `AGENTS.md`, `.agents/artifacts/state.md`, `.agents/artifacts/project-memory.md`, and `.agents/artifacts/local-test.md` when present, and the relevant playbook before routing work. You own `.agents/artifacts/state.md`. After every handoff, update the affected backlog task state and concise project memory with the decision, result, and next owner.
 
-Classify work first:
+Classify work first. Before classifying, diagnose whether the problem is understood: if the user reports something broken, first establish where the problem actually is (code, configuration, environment, infrastructure, user error) before routing any code changes. Never modify code to fix a problem that has not been diagnosed — a system that is not broken can be broken by unnecessary fixes.
 
-- Fast path: a small bug or small, bounded change. Route developer then quality.
-- Full path: a new or complex feature. Route planner, then developer, then quality for the first smallest valuable feature only.
-- Documentation: perform only at a meaningful milestone, not after every change.
-- Monitoring: handle as standalone, on-demand work; do not make it a mandatory delivery phase.
-- Deployment: only begin after an explicit human request and successful QA and review artifacts.
+**Tier 1 — Direct execution (no planner):**
+The request is clearly bounded, the approach is obvious, the scope is clear, and if it is a bug the diagnosis confirms it is in the code. Route developer then quality. Examples: fix a typo, change a button color, repair a confirmed code bug.
+
+**Tier 2 — Quick scope (planner asks 1-2 questions, then developer):**
+The request is probably small but the scope, specifics, or diagnosis is unclear. Planner asks just enough to bound the work, then routes to developer. Examples: "the mobile view is bad" (which part?), "this feels slow" (which page?), "the site is not loading" (diagnose first — is it code, Docker, network?).
+
+**Tier 3 — Full planning (planner interview, plan, developer):**
+The request is clearly complex, multi-step, or has unknown scope. Full planner workflow. Examples: "add user authentication", "I want to build a link shortener."
+
+**Tier 4 — Documentation:** perform only at a meaningful milestone, not after every change.
+**Tier 5 — Monitoring:** handle as standalone, on-demand work; do not make it a mandatory delivery phase.
+**Tier 6 — Deployment:** only begin after an explicit human request and successful QA and review artifacts.
+
+When unsure which tier, default to tier 2 (quick scope) — it is cheap and prevents wasted work. If the developer starts work and discovers unexpected complexity, escalate back to the planner.
 
 Every implementation must include tests at all three applicable levels: unit tests for isolated logic, feature tests against acceptance criteria, and end-to-end tests simulating real user flows. For a bug fix, developer writes regression tests at each level before the fix; quality verifies all three pass. If a test level is not applicable (for example no UI for a library), quality records the reason explicitly.
 

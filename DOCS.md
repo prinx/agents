@@ -190,6 +190,20 @@ The workflow asks for approval only when it cannot safely decide: the first-feat
 
 Guided/checkpointed delivery is available when you explicitly ask to pause for review at milestones. Autonomous delivery is also opt-in. Neither mode removes first-plan approval or explicit deployment approval.
 
+### Three-tier routing
+
+The orchestrator classifies your request into one of three tiers before routing:
+
+- **Tier 1 — Direct execution**: the request is clearly bounded, the approach is obvious, and if it is a bug the diagnosis confirms it is in the code. Developer handles it directly, quality reviews.
+- **Tier 2 — Quick scope**: the request is probably small but the specifics or diagnosis is unclear. The planner asks 1-2 quick questions to bound the work, then routes to developer.
+- **Tier 3 — Full planning**: the request is clearly complex or multi-step. Full planner interview, plan, then developer.
+
+When unsure, the orchestrator defaults to tier 2 — it is cheap and prevents wasted work. If the developer starts working and discovers unexpected complexity, it escalates back to the planner.
+
+### Diagnose before fixing
+
+When you report something broken, the workflow first establishes where the problem actually is — code, configuration, environment, infrastructure, or user error — before changing any code. A system that is not broken can be broken by unnecessary fixes. In production especially, changing code without diagnosis can cause real damage. If the diagnosis shows the problem is not in the code, the workflow tells you the actual cause and how to fix it without code changes.
+
 ### OpenCode
 
 Select or switch to `orchestrator` as the primary agent, then state your goal. OpenCode supports switching primary agents in a session.
@@ -256,7 +270,7 @@ The orchestrator decides whether planning is needed, then routes the work throug
 Some shortened links send users to a 404 page. Please investigate and fix it.
 ```
 
-Small bugs normally go directly to developer and quality. Larger or unclear changes can go through planning.
+The workflow first diagnoses where the problem is (code, configuration, environment, infrastructure, or user error) before changing any code. Once the diagnosis confirms a code issue, small bugs go directly to developer and quality. Larger or unclear changes go through planning.
 
 ### Review checkpoints
 

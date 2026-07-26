@@ -127,7 +127,7 @@ For example:
 
 > Some shortened links send users to a 404 page. Please investigate and fix it.
 
-Small bugs usually go to the developer, then quality. The planner is not needed for every bug.
+The workflow first diagnoses where the problem is (code, config, environment, infrastructure, or user error) before changing any code. Once confirmed as a code issue, small bugs go to the developer then quality. Larger changes go through planning.
 
 ### Monitor
 
