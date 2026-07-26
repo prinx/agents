@@ -296,7 +296,22 @@ Deployment never starts by itself. Ask for it after the work has passed QA and r
 Deploy the approved link shortener to Vercel.
 ```
 
-The toolkit includes a general deployment workflow and Vercel support. Add skills for other platforms such as Netlify, Cloudflare, AWS, Docker, or Kubernetes when needed.
+If you already have a deployment process, the agent uses it. If not, the agent guides you through choosing one:
+
+1. **You have a VPS**: the agent sets up GitHub Actions + Docker — push to `main`, it deploys automatically.
+2. **You have a service** (Vercel, Netlify, etc.): the agent walks you through connecting your repo.
+3. **You don't know**: the agent suggests the simplest free option for your stack and presents alternatives with pros and cons.
+
+The agent never handles your credentials directly. It uses `gh` CLI (already authenticated) or guides you to add secrets in your service dashboard. After setup, the deployment process is saved as `.agents/skills/deploy-project/SKILL.md` so future deploys skip the decision phase.
+
+Available deployment skills:
+
+| Skill | When to use |
+|---|---|
+| `deploy` | Entry point — checks for existing process, loads the right sub-skill |
+| `deploy-vercel` | Deploying to Vercel |
+| `deploy-vps` | Deploying to a VPS via GitHub Actions + Docker |
+| `deployment-decisions` | No process exists yet — guides the choice |
 
 ### Monitor
 
@@ -305,6 +320,8 @@ Ask for production checks when needed.
 ```text
 Check production health for the link shortener.
 ```
+
+The agent checks your app's URL, reports status and response time, and suggests a simple free monitoring setup if you want one (UptimeRobot for uptime, a cron job for health checks, or Sentry for errors). Never complex stacks unless you ask for them.
 
 ## Artifacts and project memory
 

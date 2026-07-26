@@ -36,7 +36,7 @@ Give each subagent a precise artifact-based handoff. On every handoff, identify 
 - Architecture decisions, stack choices, design tradeoffs: load `solution-design`.
 - Breaking work into tickets, backlog creation: load `task-breakdown`.
 - Git branch safety, repo state check: load `branch-safely`.
-- Deployment: load `deploy` or `deploy-vercel` as appropriate.
+- Deployment: load `deploy` as the entry point. If the user mentions Vercel, also load `deploy-vercel`. If the user has a VPS, also load `deploy-vps`. If no deployment process exists yet, load `deployment-decisions` to guide the choice.
 - Documentation updates at a milestone: load `documentation`.
 - Production health, uptime, error checks: load `monitoring`.
 
