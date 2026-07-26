@@ -190,6 +190,20 @@ The workflow asks for approval only when it cannot safely decide: the first-feat
 
 Guided/checkpointed delivery is available when you explicitly ask to pause for review at milestones. Autonomous delivery is also opt-in. Neither mode removes first-plan approval or explicit deployment approval.
 
+### Three-tier routing
+
+The orchestrator classifies your request into one of three tiers before routing:
+
+- **Tier 1 — Direct execution**: the request is clearly bounded, the approach is obvious, and if it is a bug the diagnosis confirms it is in the code. Developer handles it directly, quality reviews.
+- **Tier 2 — Quick scope**: the request is probably small but the specifics or diagnosis is unclear. The planner asks 1-2 quick questions to bound the work, then routes to developer.
+- **Tier 3 — Full planning**: the request is clearly complex or multi-step. Full planner interview, plan, then developer.
+
+When unsure, the orchestrator defaults to tier 2 — it is cheap and prevents wasted work. If the developer starts working and discovers unexpected complexity, it escalates back to the planner.
+
+### Diagnose before fixing
+
+When you report something broken, the workflow first establishes where the problem actually is — code, configuration, environment, infrastructure, or user error — before changing any code. A system that is not broken can be broken by unnecessary fixes. In production especially, changing code without diagnosis can cause real damage. If the diagnosis shows the problem is not in the code, the workflow tells you the actual cause and how to fix it without code changes.
+
 ### OpenCode
 
 Select or switch to `orchestrator` as the primary agent, then state your goal. OpenCode supports switching primary agents in a session.
@@ -256,7 +270,7 @@ The orchestrator decides whether planning is needed, then routes the work throug
 Some shortened links send users to a 404 page. Please investigate and fix it.
 ```
 
-Small bugs normally go directly to developer and quality. Larger or unclear changes can go through planning.
+The workflow first diagnoses where the problem is (code, configuration, environment, infrastructure, or user error) before changing any code. Once the diagnosis confirms a code issue, small bugs go directly to developer and quality. Larger or unclear changes go through planning.
 
 ### Review checkpoints
 
@@ -282,7 +296,22 @@ Deployment never starts by itself. Ask for it after the work has passed QA and r
 Deploy the approved link shortener to Vercel.
 ```
 
-The toolkit includes a general deployment workflow and Vercel support. Add skills for other platforms such as Netlify, Cloudflare, AWS, Docker, or Kubernetes when needed.
+If you already have a deployment process, the agent uses it. If not, the agent guides you through choosing one:
+
+1. **You have a VPS**: the agent sets up GitHub Actions + Docker — push to `main`, it deploys automatically.
+2. **You have a service** (Vercel, Netlify, etc.): the agent walks you through connecting your repo.
+3. **You don't know**: the agent suggests the simplest free option for your stack and presents alternatives with pros and cons.
+
+The agent never handles your credentials directly. It uses `gh` CLI (already authenticated) or guides you to add secrets in your service dashboard. After setup, the deployment process is saved as `.agents/skills/deploy-project/SKILL.md` so future deploys skip the decision phase.
+
+Available deployment skills:
+
+| Skill | When to use |
+|---|---|
+| `deploy` | Entry point — checks for existing process, loads the right sub-skill |
+| `deploy-vercel` | Deploying to Vercel |
+| `deploy-vps` | Deploying to a VPS via GitHub Actions + Docker |
+| `deployment-decisions` | No process exists yet — guides the choice |
 
 ### Monitor
 
@@ -291,6 +320,8 @@ Ask for production checks when needed.
 ```text
 Check production health for the link shortener.
 ```
+
+The agent checks your app's URL, reports status and response time, and suggests a simple free monitoring setup if you want one (UptimeRobot for uptime, a cron job for health checks, or Sentry for errors). Never complex stacks unless you ask for them.
 
 ## Artifacts and project memory
 
@@ -309,7 +340,7 @@ Transient workflow state is intentionally ignored: `.agents/artifacts/state.md` 
 
 ### `AGENTS.md` and `CLAUDE.md`
 
-Every project install writes `AGENTS.md`, which contains shared project instructions. Claude Code project installs also write `CLAUDE.md`, a shim that imports `@AGENTS.md`. Keep shared instructions in `AGENTS.md` so tool-specific configurations can use the same source of truth.
+Every project install writes `AGENTS.md`, which contains shared project instructions. Claude Code project installs also write `CLAUDE.md`, a shim that imports `@AGENTS.md`. Keep shared instructions in `AGENTS.md` so tool-specific configurations can use the same source of truth. When `AGENTS.md` is absent (for example after a global install or in a new project), the planner initializes it from the `.agents/templates/AGENTS.md` template at the start of the first workflow run.
 
 ### Git policy
 

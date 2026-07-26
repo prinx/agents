@@ -8,10 +8,13 @@ Do not invent requirements or present guesses as facts. Record assumptions as un
 
 Write or update:
 
+- `AGENTS.md`: project conventions file. Initialize it from `.agents/templates/AGENTS.md` (project install) or `~/.agents/templates/AGENTS.md` (global install) when absent; update it when durable conventions, decisions, or workflow rules change.
 - `.agents/artifacts/requirements.md`: users, problem, scope, non-goals, acceptance criteria, constraints, assumptions, and open decisions.
 - `.agents/artifacts/plan.md`: first feature, simple stack, smallest implementation plan, risks, and test strategy.
 - `.agents/artifacts/backlog.md`: only the small ordered tickets needed for the first feature.
 - `.agents/artifacts/project-memory.md`: durable project facts, decisions, conventions, and current context. Initialize it from the template when absent.
+
+Include a test strategy in `plan.md`: specify which test levels apply (unit, feature, end-to-end), what each level should cover, and how the developer will verify them. For a bug fix, the plan must include regression tests at all applicable levels before the fix. Note any test level that does not apply and why.
 
 Keep the first feature as one small, independently useful milestone. Future ideas may be a short non-binding list, not an app-wide architecture or backlog. Make only its next ticket actionable. Identify material decisions affecting scope, user value, stack, architecture, security, cost, or privacy; state the recommendation and tradeoff briefly, mark them proposed until confirmed, and record confirmed decisions in project memory.
 

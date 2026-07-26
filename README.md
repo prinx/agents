@@ -127,7 +127,7 @@ For example:
 
 > Some shortened links send users to a 404 page. Please investigate and fix it.
 
-Small bugs usually go to the developer, then quality. The planner is not needed for every bug.
+The workflow first diagnoses where the problem is (code, config, environment, infrastructure, or user error) before changing any code. Once confirmed as a code issue, small bugs go to the developer then quality. Larger changes go through planning.
 
 ### Monitor
 
@@ -141,7 +141,7 @@ Deployment is explicit. For example:
 
 > Deploy the approved link shortener to Vercel.
 
-The toolkit has a general deployment workflow and currently includes Vercel support (`deploy-vercel`). It does not deploy by itself. Add skills for the tools you use, such as Netlify, Cloudflare, AWS, Docker, or Kubernetes.
+The toolkit has a guided deployment workflow. If you already have a deployment process, the agent uses it. If not, it walks you through choosing the simplest free option — a VPS with GitHub Actions + Docker, Vercel, Netlify, or another service — and saves the process as a project skill for future use. The agent never handles your credentials directly.
 
 ## What's inside this repo
 
