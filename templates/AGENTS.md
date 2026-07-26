@@ -1,11 +1,14 @@
 # Project Conventions
 
+The planner initializes this file from the `.agents/templates/AGENTS.md` template when absent. Update it when durable conventions, decisions, or workflow rules change.
+
 - Keep durable project conventions here.
 - Store mutable workflow artifacts in `.agents/artifacts/`.
 - The orchestrator owns `state.md`; planner initializes project memory; quality generates and owns `local-test.md` from repository evidence.
 - Default to `prototype-first`: approve the smallest first-feature plan, then implement and test it without routine confirmation. Record the selected delivery mode and confirmed material decisions in project memory. Guided/checkpointed and autonomous delivery require an explicit request.
+- Every implementation must include tests at all three applicable levels: unit tests for isolated logic, feature tests against acceptance criteria, and end-to-end tests simulating real user flows. For a bug fix, developer writes regression tests at all three applicable levels before the fix. The planner includes a test strategy in `plan.md` specifying which levels apply and what each covers.
 - Ask for approval only for the first-feature plan, material scope or goal changes, security/cost/privacy/credential decisions, destructive or remote actions, deployment, or an explicit user-requested checkpoint.
-- After each completed user-facing feature, give the simplest actual local test path and ask whether the user wants to test, fix, adjust, or start the next feature. Do not automatically build the next major feature unless autonomous delivery was explicitly selected.
+- After each completed user-facing feature, give the simplest actual local test path organized by test level and ask whether the user wants to test, fix, adjust, or start the next feature. Do not automatically build the next major feature unless autonomous delivery was explicitly selected.
 - Commit `requirements.md`, `plan.md`, `backlog.md`, `project-memory.md`, `local-test.md`, and this `AGENTS.md`.
 - Do not commit transient `state.md` or `failure-log.md`.
 - Deployment requires an explicit human request and passing quality gates.

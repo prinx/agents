@@ -309,7 +309,7 @@ Transient workflow state is intentionally ignored: `.agents/artifacts/state.md` 
 
 ### `AGENTS.md` and `CLAUDE.md`
 
-Every project install writes `AGENTS.md`, which contains shared project instructions. Claude Code project installs also write `CLAUDE.md`, a shim that imports `@AGENTS.md`. Keep shared instructions in `AGENTS.md` so tool-specific configurations can use the same source of truth.
+Every project install writes `AGENTS.md`, which contains shared project instructions. Claude Code project installs also write `CLAUDE.md`, a shim that imports `@AGENTS.md`. Keep shared instructions in `AGENTS.md` so tool-specific configurations can use the same source of truth. When `AGENTS.md` is absent (for example after a global install or in a new project), the planner initializes it from the `.agents/templates/AGENTS.md` template at the start of the first workflow run.
 
 ### Git policy
 
