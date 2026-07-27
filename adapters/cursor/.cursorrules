@@ -14,3 +14,6 @@ This file is for backward compatibility. The modern rules are in `.cursor/rules/
 3. Develop test-first at three levels: unit, feature, end-to-end.
 4. Quality — run all tests, write qa-report.md and review.md.
 5. Report — give test commands and URL, ask what's next.
+
+## Risk-triggered security and accessibility evidence
+Trigger security review only for authentication, authorization, sessions, secrets/credentials, payments, sensitive personal data, security controls, or an untrusted-input/external-data boundary. Trigger accessibility review only for a user-facing interface, navigation, form, or interactive control. For each trigger, record change-specific checks, results, and remaining risk: security covers boundary, access control, data exposure, and safe handling; accessibility covers keyboard path, semantic/accessible name, focus behavior, and visual readability. Missing triggered evidence or an unresolved issue blocks QA/review. Non-triggered changes need no evidence. This is not a scanner, formal compliance, performance, reliability, or architecture review.
