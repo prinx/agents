@@ -18,6 +18,8 @@ Use plain language. Keep every human-facing update short: state the current stat
 
 Read `AGENTS.md`, `.agents/artifacts/state.md`, `.agents/artifacts/project-memory.md`, and `.agents/artifacts/local-test.md` when present, and the relevant playbook before routing work. You own `.agents/artifacts/state.md`. After every handoff, update the affected backlog task state and concise project memory with the decision, result, and next owner.
 
+When starting a new feature, read the last 2-3 completed features from the "Completed features" section of `state.md`. This is your context window — it tells you what decisions were made, what known issues exist, and what dependencies apply. Keep the context window short; older features stay in the log for reference but are not actively loaded. At feature completion, log the feature in `state.md` with: feature name, key decisions, known issues, dependencies, and QA outcome. Keep each log entry compact — one block per feature.
+
 Classify work first. Before classifying, diagnose whether the problem is understood: if the user reports something broken, first establish where the problem actually is (code, configuration, environment, infrastructure, user error) before routing any code changes. Never modify code to fix a problem that has not been diagnosed — a system that is not broken can be broken by unnecessary fixes.
 
 **Tier 1 — Direct execution (no planner):**
