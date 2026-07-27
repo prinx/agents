@@ -52,3 +52,6 @@ After quality passes, give exact local test commands and URL. Ask: test, fix, ad
 - Choose the smallest working solution
 - Do not add infrastructure or abstractions unless required
 - Deployment requires explicit human request
+
+## Risk-triggered security and accessibility evidence
+Trigger security review only for authentication, authorization, sessions, secrets/credentials, payments, sensitive personal data, security controls, or an untrusted-input/external-data boundary. Trigger accessibility review only for a user-facing interface, navigation, form, or interactive control. Record the trigger, change-specific checks, results, and remaining risk; security covers boundary, access control, data exposure, and safe handling, while accessibility covers keyboard path, semantic/accessible name, focus behavior, and visual readability. Missing triggered evidence or an unresolved issue blocks QA/review; non-triggered changes need no evidence. This is not a scanner, formal compliance, performance, reliability, or architecture review.

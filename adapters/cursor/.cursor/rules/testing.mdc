@@ -28,3 +28,6 @@ Work test-first at three levels:
 For a bug fix: write regression tests at each applicable level before the fix. Confirm each fails, fix, confirm each passes.
 
 Never claim tests pass without running them. Record actual output.
+
+## Risk-triggered security and accessibility evidence
+For triggered reviews only, record the trigger, change-specific checks, results, and remaining risk. Security triggers: authentication, authorization, sessions, secrets/credentials, payments, sensitive personal data, security controls, or an untrusted-input/external-data boundary; check boundary, access control, data exposure, and safe handling. Accessibility triggers: a user-facing interface, navigation, form, or interactive control; check keyboard path, semantic/accessible name, focus behavior, and visual readability. Missing triggered evidence or an unresolved issue blocks QA/review. Non-triggered changes need no evidence; this is not a scanner, formal compliance, performance, reliability, or architecture review.

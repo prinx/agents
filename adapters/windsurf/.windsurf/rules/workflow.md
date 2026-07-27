@@ -20,3 +20,6 @@ You are following an engineering workflow with distinct phases. Never skip a pha
    - 4b: Inspect the diff — focus on correctness, security, and scope only. Do not review for subjective style.
    - 4c: Write artifacts — classify findings as blocking (must fix) or advisory (should fix). Write qa-report.md, review.md, and local-test.md. Outcome is APPROVE only if no blocking findings exist.
 5. **Report**: give test commands and URL, ask what's next.
+
+## Risk-triggered security and accessibility evidence
+Trigger security review only for authentication, authorization, sessions, secrets/credentials, payments, sensitive personal data, security controls, or an untrusted-input/external-data boundary. Trigger accessibility review only for a user-facing interface, navigation, form, or interactive control. Record the trigger, change-specific checks, results, and remaining risk; security covers boundary, access control, data exposure, and safe handling, while accessibility covers keyboard path, semantic/accessible name, focus behavior, and visual readability. Missing triggered evidence or an unresolved issue blocks QA/review; non-triggered changes need no evidence. This is not a scanner, formal compliance, performance, reliability, or architecture review.
