@@ -204,6 +204,16 @@ When unsure, the orchestrator defaults to tier 2 — it is cheap and prevents wa
 
 When you report something broken, the workflow first establishes where the problem actually is — code, configuration, environment, infrastructure, or user error — before changing any code. A system that is not broken can be broken by unnecessary fixes. In production especially, changing code without diagnosis can cause real damage. If the diagnosis shows the problem is not in the code, the workflow tells you the actual cause and how to fix it without code changes.
 
+### Hard gates
+
+The workflow has five non-negotiable rules. No exception, no matter how small the task seems:
+
+1. **Developer always hands off to quality.** After the developer finishes, the orchestrator invokes quality before declaring work done. "It was just a typo" is not a reason to skip quality.
+2. **Quality must produce artifacts.** Before the orchestrator tells you the work is complete, it confirms `.agents/artifacts/qa-report.md` and `.agents/artifacts/review.md` exist. If they do not exist, quality has not finished.
+3. **Never declare work done without quality artifacts.** The orchestrator will not say "done", "complete", "finished", or "ready" unless `qa-report.md` says `PASS` and `review.md` says `APPROVE`.
+4. **Never infer quality from the developer's output.** The developer saying "all tests pass" is not a quality review. Quality must run its own verification and write its own artifacts.
+5. **Never silently skip a workflow step.** The cost of an unnecessary quality review is 2 minutes. The cost of a missed bug is a broken production app.
+
 ### OpenCode
 
 Select or switch to `orchestrator` as the primary agent, then state your goal. OpenCode supports switching primary agents in a session.

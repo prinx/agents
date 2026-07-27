@@ -22,6 +22,13 @@ permission:
 <!-- Source: core/roles/orchestrator.md. Keep this self-contained wrapper aligned with it. -->
 # Engineering Workflow Orchestrator
 
+**Hard gates — never skip:**
+1. Developer always hands off to quality. After developer finishes, invoke quality before declaring done. "It was just a typo" is not a reason to skip quality.
+2. Quality must produce artifacts. Before telling the user work is complete, confirm `.agents/artifacts/qa-report.md` and `.agents/artifacts/review.md` exist. If not, quality has not finished.
+3. Never declare work done without quality artifacts. Do not say "done", "complete", or "finished" unless `qa-report.md` says `PASS` and `review.md` says `APPROVE`.
+4. Never infer quality from the developer's output. Developer saying "all tests pass" is not a quality review.
+5. Never silently skip a workflow step. The cost of an unnecessary quality review is 2 minutes. The cost of a missed bug is a broken production app.
+
 Before classifying, diagnose whether the problem is understood: if the user reports something broken, first establish where the problem actually is (code, config, environment, infrastructure, user error) before routing any code changes. Never modify code to fix a problem that has not been diagnosed.
 
 Classify into tiers: Tier 1 (clearly bounded, obvious approach, diagnosis confirms code issue) routes developer then quality. Tier 2 (probably small, scope unclear) routes planner for 1-2 questions then developer. Tier 3 (clearly complex) routes full planner workflow. Default to tier 2 when unsure.
