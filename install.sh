@@ -16,7 +16,7 @@ COLOR=false
 if [ -t 1 ] && [ -t 2 ] && [ -z "${NO_COLOR+x}" ]; then COLOR=true; fi
 
 usage() {
-  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|all|detect] (--global | --project [target]) [--force] [--with-frontend-design] [--no-color]" >&2
+  printf '%s\n' "Usage: $0 [--ref <tag-or-commit>] [--tool opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|vscode|all|detect] (--global | --project [target]) [--force] [--with-frontend-design] [--no-color]" >&2
   printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
 color() {
@@ -32,18 +32,18 @@ choose_tool() {
   default_choice=$1
   while :; do
     printf '%s\n' "$(color '1;34' 'Select coding assistant:')" > /dev/tty
-    printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 Cursor' '7 Windsurf' '8 Devin' '9 All supported assistants' '10 Detect installed assistants automatically.' > /dev/tty
-    if [ "$default_choice" = detect ]; then prompt 'Choice [10]: '; else prompt 'Choice [1-9]: '; fi
+    printf '%s\n' '1 OpenCode' '2 Claude Code' '3 Codex' '4 Grok Build' '5 Antigravity' '6 Cursor' '7 Windsurf' '8 Devin' '9 VS Code' '10 All supported assistants' '11 Detect installed assistants automatically.' > /dev/tty
+    if [ "$default_choice" = detect ]; then prompt 'Choice [11]: '; else prompt 'Choice [1-10]: '; fi
     read_tty choice || fail 'Could not read the tool choice from the terminal.'
     [ -n "$choice" ] || choice=7
     case "$choice" in
       1) TOOL=opencode ;; 2) TOOL=claude-code ;; 3) TOOL=codex ;; 4) TOOL=grok ;;
       5) TOOL=antigravity ;; 6) TOOL=cursor ;; 7) TOOL=windsurf ;; 8) TOOL=devin ;;
-      9) TOOL=all ;; 10) TOOL=detect ;;
-      *) printf '%s\n' 'Choose a number from 1 through 10.' >&2; continue ;;
+      9) TOOL=vscode ;; 10) TOOL=all ;; 11) TOOL=detect ;;
+      *) printf '%s\n' 'Choose a number from 1 through 11.' >&2; continue ;;
     esac
     if [ "$default_choice" != detect ] && [ "$TOOL" = detect ]; then
-      printf '%s\n' 'Choose a number from 1 through 9.' >&2
+      printf '%s\n' 'Choose a number from 1 through 10.' >&2
       continue
     fi
     return
@@ -80,6 +80,8 @@ detect_tools() {
   [ -f "$HOME/.windsurfrules" ] || command -v windsurf >/dev/null 2>&1 && detected="$detected windsurf"
   # Devin detection: check for devin binary
   command -v devin >/dev/null 2>&1 && detected="$detected devin"
+  # VS Code detection: check for code binary or VS Code application
+  command -v code >/dev/null 2>&1 && detected="$detected vscode"
   DETECTED_TOOLS=${detected# }
   [ -n "$DETECTED_TOOLS" ] || return 1
   printf 'Detected assistants: %s\n' "$(color 34 "$DETECTED_TOOLS")" >&2
@@ -116,7 +118,7 @@ if [ -z "$TOOL" ] && [ -z "$SCOPE" ] && has_tty; then
 fi
 [ -n "$TOOL" ] || { usage; exit 1; }
 [ -n "$SCOPE" ] || { usage; exit 1; }
-case "$TOOL" in opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|all|detect) ;; *) fail 'Invalid --tool value.' ;; esac
+case "$TOOL" in opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|vscode|all|detect) ;; *) fail 'Invalid --tool value.' ;; esac
 
 if [ "$TOOL" = detect ]; then
   [ -n "$DETECTED_TOOLS" ] || detect_tools || fail 'No supported assistants were detected. Select one explicitly with --tool.'

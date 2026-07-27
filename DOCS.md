@@ -17,7 +17,7 @@ Choose an assistant and choose global or project installation. Then restart an a
 With no flags, the installer shows a numbered assistant menu.
 
 - Press Enter at the assistant menu to choose `detect`, which finds installed supported assistants.
-- `detect` checks for `opencode`, `claude`, `codex`, `grok`, `agy`, `cursor`, `windsurf`, and `devin` executables. It shows what it found and asks before installing.
+- `detect` checks for `opencode`, `claude`, `codex`, `grok`, `agy`, `cursor`, `windsurf`, `devin`, and `code` (VS Code) executables. It shows what it found and asks before installing.
 - Press Enter at the scope prompt to choose global installation.
 - Choose project installation to use the current directory. The installer shows that target directory.
 - The default source is the `main` branch. Use `--ref` to select a tag or commit.
@@ -65,6 +65,9 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 # Devin
 curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool devin --global
 
+# VS Code
+curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool vscode --project .
+
 # All supported assistants
 curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool all --project .
 
@@ -91,7 +94,7 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -s -- --tool all --project . --with-frontend-design
 ```
 
-The installer invokes the documented skills.sh command `npx skills add anthropics/skills` with `--skill frontend-design`, `--agent` for the selected assistant targets, `--global` for global installs, and `--yes` to avoid a second prompt. skills.sh supports the toolkit targets `opencode`, `claude-code`, `codex`, `grok`, `antigravity`, `cursor`, `windsurf`, and `devin`; `all` passes all eight names, while `detect` installs only to the assistants detected by this installer. It reports explicit optional-skill success only after skills.sh succeeds. If skills.sh rejects a target or source, the installer reports that the external skill was not installed and does not report overall success.
+The installer invokes the documented skills.sh command `npx skills add anthropics/skills` with `--skill frontend-design`, `--agent` for the selected assistant targets, `--global` for global installs, and `--yes` to avoid a second prompt. skills.sh supports the toolkit targets `opencode`, `claude-code`, `codex`, `grok`, `antigravity`, `cursor`, `windsurf`, `devin`, and `vscode`; `all` passes all nine names, while `detect` installs only to the assistants detected by this installer. It reports explicit optional-skill success only after skills.sh succeeds. If skills.sh rejects a target or source, the installer reports that the external skill was not installed and does not report overall success.
 
 The source is external, is not vendored into this repository, and follows Anthropic's current default branch. It is intentionally **not pinned**: current skills.sh cannot install a commit SHA as a remote ref because it clones remote refs with `git clone --branch`, which only accepts an advertised branch or tag. A temporary downloaded archive would instead leave skills.sh with a transient local-path lock entry, so the toolkit does not use that approach. Anthropic licenses the skill under Apache-2.0; its files and notices remain with the external installation. Review the upstream source and skills.sh's security posture before opting in. For project installs, skills.sh records the source, skill path, and a content hash in the project `skills-lock.json`; global installs use its `.skill-lock.json` at `$XDG_STATE_HOME/skills/.skill-lock.json` or `~/.agents/.skill-lock.json`. This toolkit does not create or modify either lockfile itself.
 
@@ -125,6 +128,10 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 | Codex | `~/.codex/agents`, `~/.agents/{skills,playbooks,templates}` | `.codex/agents`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
 | Grok Build | `~/.grok/{agents,skills}`, `~/.agents/{skills,playbooks,templates}` | `.grok/{agents,skills}`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
 | Antigravity | `~/.gemini/config/skills`, `~/.agents/{skills,playbooks,templates}` | `.agents/{skills,playbooks,templates,artifacts,rules,workflows}`, `AGENTS.md` |
+| Cursor | N/A (global config managed by Cursor) | `.cursor/rules/*.mdc`, `.cursorrules`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
+| Windsurf | `~/.windsurfrules` | `.windsurf/rules/*.md`, `.windsurfrules`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
+| Devin | `~/.devin/skills` | `.devin/skills`, `AGENTS.md`, `.agents/{skills,playbooks,templates,artifacts}` |
+| VS Code | N/A (project-level only) | `.github/copilot-instructions.md`, `CLAUDE.md`, `.agents/{skills,playbooks,templates,artifacts}`, `AGENTS.md` |
 
 The installer supplies an `opencode.json` policy file and a Claude Code `settings.json` policy file. Existing configuration files are skipped unless you use `--force`.
 

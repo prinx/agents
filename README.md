@@ -40,10 +40,11 @@ With no scope or tool flags, it presents this numbered menu. Press Enter to dete
 6. Cursor
 7. Windsurf
 8. Devin
-9. All supported assistants
-10. Detect installed assistants automatically
+9. VS Code
+10. All supported assistants
+11. Detect installed assistants automatically
 
-It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. Next, it offers Anthropic's external `frontend-design` skill through skills.sh; press Enter for No. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, `agy`, `cursor`, `windsurf`, or `devin`) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
+It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. Next, it offers Anthropic's external `frontend-design` skill through skills.sh; press Enter for No. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, `agy`, `cursor`, `windsurf`, `devin`, or `code` for VS Code) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
 
 For OpenCode, you can choose the scope directly:
 
@@ -98,6 +99,7 @@ Start in your bootstrapped project and describe what you want. Each tool handles
 - **Cursor:** The orchestrator workflow is installed as an always-on rule in `.cursor/rules/workflow.mdc`. Start a new chat and describe your goal — Cursor reads the rules automatically and guides the work through planning, implementation, and review. See the [Cursor rules documentation](https://docs.cursor.com/context/rules).
 - **Windsurf:** The orchestrator workflow is installed in `.windsurf/rules/workflow.md`. Start a new Cascade session and describe your goal — Windsurf reads the rules automatically and orchestrates the workflow. See the [Windsurf rules documentation](https://docs.windsurf.com/windsurf/memories-and-rules).
 - **Devin:** The orchestrator workflow is loaded as Devin's session starter from `AGENTS.md` at the project root. Skills in `.devin/skills/` provide reusable procedures. Start a session and describe your goal — Devin reads the instructions and follows the workflow. See the [Devin skills documentation](https://docs.devin.ai/agent/skills).
+- **VS Code:** The workflow is installed as GitHub Copilot instructions in `.github/copilot-instructions.md`. Open the project in VS Code, start a Copilot Chat session, and describe your goal — Copilot reads the instructions and follows the workflow. For Claude Code extension users, `CLAUDE.md` provides a quick reference. See the [GitHub Copilot documentation](https://docs.github.com/en/copilot/overview).
 
 ### New project
 

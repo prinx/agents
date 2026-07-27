@@ -19,7 +19,7 @@ color() {
 heading() { printf '%s\n' "$(color '1;34' "$1")"; }
 fail() { printf '%s\n' "$(color 31 "$1")" >&2; exit 1; }
 usage() {
-  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|all --scope global|project [--target <directory>] [--force] [--with-frontend-design] [--no-color]" >&2
+  printf '%s\n' "Usage: $0 --tool opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|vscode|all --scope global|project [--target <directory>] [--force] [--with-frontend-design] [--no-color]" >&2
   printf '%s\n' 'Existing toolkit files are skipped by default. Use --force to overwrite them; --yes is a backwards-compatible alias for --force.' >&2
 }
 REPORT_DIR=$(mktemp -d "${TMPDIR:-/tmp}/workflow-toolkit-report.XXXXXX") || fail 'Could not create an installation report directory.'
@@ -39,7 +39,7 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-case "$TOOL" in opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|all) ;; *) fail 'Invalid tool.' ;; esac
+case "$TOOL" in opencode|claude-code|codex|grok|antigravity|cursor|windsurf|devin|vscode|all) ;; *) fail 'Invalid tool.' ;; esac
 case "$SCOPE" in global|project) ;; *) fail 'Invalid install scope.' ;; esac
 
 copy_file() {
@@ -130,6 +130,16 @@ install_devin_project() {
 }
 install_devin_global() {
   copy_tree_files "$TOOLKIT_DIR/adapters/devin/.devin" "$HOME/.devin"
+}
+install_vscode_project() {
+  target_dir=$1
+  copy_tree_files "$TOOLKIT_DIR/adapters/vscode/.github" "$target_dir/.github"
+  copy_file "$TOOLKIT_DIR/adapters/vscode/CLAUDE.md" "$target_dir/CLAUDE.md"
+}
+install_vscode_global() {
+  # VS Code doesn't have a global config location for Copilot instructions
+  # Project-level installation is the standard approach
+  printf '  VS Code instructions are installed per-project. Use --scope project.\n'
 }
 
 absolute_path() {
@@ -241,6 +251,17 @@ print_devin_locations() {
   return 0
 }
 
+print_vscode_locations() {
+  base=$1
+  shared=$2
+  instructions=$3
+  heading 'Installed VS Code workflow files:'
+  print_location 'Copilot instructions' "$base/.github/copilot-instructions.md"
+  print_location 'Shared workspace' "$shared"
+  [ -n "$instructions" ] && print_location 'Instructions' "$instructions"
+  return 0
+}
+
 print_file_report() {
   report_name=$1
   report_file=$REPORT_DIR/$2
@@ -300,10 +321,12 @@ if [ "$SCOPE" = project ]; then
     cursor) install_cursor_project "$TARGET" ;;
     windsurf) install_windsurf_project "$TARGET" ;;
     devin) install_devin_project "$TARGET" ;;
+    vscode) install_vscode_project "$TARGET" ;;
     all)
       install_opencode "$TARGET/.opencode"; install_claude "$TARGET/.claude"; copy_file "$TOOLKIT_DIR/adapters/claude-code/CLAUDE.md" "$TARGET/CLAUDE.md"
       install_codex "$TARGET/.codex"; install_grok "$TARGET/.grok"; install_antigravity_project "$TARGET"
-      install_cursor_project "$TARGET"; install_windsurf_project "$TARGET"; install_devin_project "$TARGET" ;;
+      install_cursor_project "$TARGET"; install_windsurf_project "$TARGET"; install_devin_project "$TARGET"
+      install_vscode_project "$TARGET" ;;
   esac
   case "$TOOL" in
     opencode) print_opencode_locations "$TARGET/.opencode" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
@@ -314,6 +337,7 @@ if [ "$SCOPE" = project ]; then
     cursor) print_cursor_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
     windsurf) print_windsurf_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
     devin) print_devin_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
+    vscode) print_vscode_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
     all)
       print_opencode_locations "$TARGET/.opencode" "$TARGET/.agents" "$TARGET/AGENTS.md"
       print_claude_locations "$TARGET/.claude" "$TARGET/.agents" "$TARGET/CLAUDE.md"
@@ -322,7 +346,8 @@ if [ "$SCOPE" = project ]; then
       print_antigravity_locations "$TARGET/.agents" "$TARGET/AGENTS.md" "$TARGET/.agents/rules" "$TARGET/.agents/workflows" "$TARGET/.agents/skills"
       print_cursor_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md"
       print_windsurf_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md"
-      print_devin_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
+      print_devin_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md"
+      print_vscode_locations "$TARGET" "$TARGET/.agents" "$TARGET/AGENTS.md" ;;
   esac
 else
   install_shared_global
@@ -335,9 +360,10 @@ else
     cursor) install_cursor_global ;;
     windsurf) install_windsurf_global ;;
     devin) install_devin_global ;;
+    vscode) install_vscode_global ;;
     all)
       install_opencode "${XDG_CONFIG_HOME:-"$HOME/.config"}/opencode"; install_claude "$HOME/.claude"; install_codex "$HOME/.codex"; install_grok "$HOME/.grok"; copy_tree_files "$TOOLKIT_DIR/skills" "$HOME/.gemini/config/skills"
-      install_cursor_global; install_windsurf_global; install_devin_global ;;
+      install_cursor_global; install_windsurf_global; install_devin_global; install_vscode_global ;;
   esac
   opencode_base=${XDG_CONFIG_HOME:-"$HOME/.config"}/opencode
   case "$TOOL" in
@@ -351,6 +377,7 @@ else
     cursor) print_cursor_locations "$HOME" "$HOME/.agents" '' ;;
     windsurf) print_windsurf_locations "$HOME" "$HOME/.agents" '' ;;
     devin) print_devin_locations "$HOME" "$HOME/.agents" '' ;;
+    vscode) print_vscode_locations "$HOME" "$HOME/.agents" '' ;;
     all)
       print_opencode_locations "$opencode_base" "$HOME/.agents" ''
       printf '  User preferences: %s (not installed by this toolkit)\n' "$(absolute_path "$opencode_base/opencode.json")"
@@ -360,7 +387,8 @@ else
       print_antigravity_locations "$HOME/.agents" '' '' '' "$HOME/.gemini/config/skills"
       print_cursor_locations "$HOME" "$HOME/.agents" ''
       print_windsurf_locations "$HOME" "$HOME/.agents" ''
-      print_devin_locations "$HOME" "$HOME/.agents" '' ;;
+      print_devin_locations "$HOME" "$HOME/.agents" ''
+      print_vscode_locations "$HOME" "$HOME/.agents" '' ;;
   esac
 fi
 

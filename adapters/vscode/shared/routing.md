@@ -1,0 +1,3 @@
+Before classifying, diagnose whether the problem is understood: if the user reports something broken, first establish where the problem actually is (code, config, environment, infrastructure, user error) before routing any code changes. Never modify code to fix a problem that has not been diagnosed.
+
+Classify into tiers: Tier 1 (clearly bounded, obvious approach, diagnosis confirms code issue) routes developer then quality. Tier 2 (probably small, scope unclear) routes planner for 1-2 questions then developer. Tier 3 (clearly complex) routes full planner workflow. Default to tier 2 when unsure.
