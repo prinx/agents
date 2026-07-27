@@ -37,10 +37,13 @@ With no scope or tool flags, it presents this numbered menu. Press Enter to dete
 3. Codex
 4. Grok Build
 5. Antigravity
-6. All supported assistants
-7. Detect installed assistants automatically
+6. Cursor
+7. Windsurf
+8. Devin
+9. All supported assistants
+10. Detect installed assistants automatically
 
-It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. Next, it offers Anthropic's external `frontend-design` skill through skills.sh; press Enter for No. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, or `agy`) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
+It then asks whether to install globally or into the current project; Enter selects global. Choosing project uses the current directory by default and shows the target. Next, it offers Anthropic's external `frontend-design` skill through skills.sh; press Enter for No. `all` with global scope warns before installing multiple tool configurations. `detect` reports available executables (`opencode`, `claude`, `codex`, `grok`, `agy`, `cursor`, `windsurf`, or `devin`) and asks for confirmation. If none are found, the installer asks you to choose an assistant explicitly.
 
 For OpenCode, you can choose the scope directly:
 
@@ -92,6 +95,9 @@ Start in your bootstrapped project and describe what you want. Each tool handles
 - **Claude Code:** Installed roles are subagents. Ask Claude to delegate explicitly, for example: `Use the orchestrator agent to coordinate this work.` See the [Claude Code subagents documentation](https://code.claude.com/docs/en/sub-agents).
 - **Grok Build:** Select the installed `orchestrator` with `/agents`, then state your goal. Grok Build supports project agent definitions and agent selection. See the [Grok Build subagents documentation](https://docs.x.ai/build/features/subagents).
 - **Google Antigravity:** Support is partial. This toolkit installs rules and workflows, not a selectable static orchestrator role. State your goal and ask the agent to follow the installed workflow; the rule directs it to define and use planner, developer, and quality subagents when needed. See the [Antigravity rules and workflows documentation](https://antigravity.google/docs/rules-workflows) and [subagents documentation](https://antigravity.google/docs/subagents).
+- **Cursor:** The orchestrator workflow is installed as an always-on rule in `.cursor/rules/workflow.mdc`. Start a new chat and describe your goal — Cursor reads the rules automatically and guides the work through planning, implementation, and review. See the [Cursor rules documentation](https://docs.cursor.com/context/rules).
+- **Windsurf:** The orchestrator workflow is installed in `.windsurf/rules/workflow.md`. Start a new Cascade session and describe your goal — Windsurf reads the rules automatically and orchestrates the workflow. See the [Windsurf rules documentation](https://docs.windsurf.com/windsurf/memories-and-rules).
+- **Devin:** The orchestrator workflow is loaded as Devin's session starter from `AGENTS.md` at the project root. Skills in `.devin/skills/` provide reusable procedures. Start a session and describe your goal — Devin reads the instructions and follows the workflow. See the [Devin skills documentation](https://docs.devin.ai/agent/skills).
 
 ### New project
 

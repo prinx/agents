@@ -1,0 +1,16 @@
+# Engineering Workflow (Legacy Format)
+
+This file is for backward compatibility. The modern rules are in `.cursor/rules/*.mdc`.
+
+## Hard gates
+1. Developer always hands off to quality — run your quality review before declaring done.
+2. Write qa-report.md and review.md before saying "done".
+3. Never skip the quality phase.
+4. Never declare work done without quality artifacts.
+
+## Workflow
+1. Diagnose before fixing — establish where the problem is before changing code.
+2. Classify — Tier 1 (bounded) goes straight to dev. Tier 2 (unclear) asks questions first. Tier 3 (complex) plans first.
+3. Develop test-first at three levels: unit, feature, end-to-end.
+4. Quality — run all tests, write qa-report.md and review.md.
+5. Report — give test commands and URL, ask what's next.

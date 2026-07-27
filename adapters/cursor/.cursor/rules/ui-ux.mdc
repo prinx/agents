@@ -1,0 +1,19 @@
+---
+description: UI/UX design guidance for user-facing work
+globs: "**/*.{tsx,jsx,css,scss,html,vue,svelte}"
+alwaysApply: false
+---
+
+# UI/UX Skill
+
+For any UI or styling work, follow these principles:
+
+- Preserve existing app conventions and approved scope
+- Prioritize clear labels, visible feedback, and intuitive navigation
+- Ensure semantic and keyboard-accessible UI
+- Use visible focus indicators and sufficient contrast
+- Support responsive behavior — test at mobile and desktop widths
+- Only add the states the feature needs (loading, empty, error, success)
+- A simple UI can still be polished and intentional
+- Do not add a new design system unless the user asks for one
+- Do not add decorative complexity or unnecessary animations

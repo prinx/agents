@@ -1,0 +1,30 @@
+---
+description: Testing guidance for unit, feature, and E2E tests
+globs: "**/*.{test,spec}.{ts,tsx,js,jsx,py,go,rs}"
+alwaysApply: false
+---
+
+# Testing Skill
+
+Work test-first at three levels:
+
+## Unit tests
+- Write a focused failing test for the core logic
+- Implement the smallest change to make it pass
+- Cover edge cases, error handling, meaningful branches
+- Run with the project's test runner (npm test, pytest, go test, etc.)
+
+## Feature tests
+- Verify each acceptance criterion through observable behavior
+- Test the normal flow, failure paths, validation
+- For UI: include keyboard, accessible-name, responsive checks
+- Record actual results
+
+## End-to-end tests
+- Simulate the real user journey in the actual application
+- Start the app, run the complete flow, record URL or commands
+- Confirm the goal is achieved
+
+For a bug fix: write regression tests at each applicable level before the fix. Confirm each fails, fix, confirm each passes.
+
+Never claim tests pass without running them. Record actual output.

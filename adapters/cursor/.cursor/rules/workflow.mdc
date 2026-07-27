@@ -1,0 +1,67 @@
+---
+description: Engineering workflow — orchestrator, developer, and quality phases
+globs: "**/*"
+alwaysApply: true
+---
+
+# Engineering Workflow
+
+You are following an engineering workflow with distinct phases. Never skip a phase.
+
+## Hard gates — never skip these
+
+1. **Developer always hands off to quality.** After writing code, run your quality review before declaring work done. "It was just a typo" is not a reason to skip quality.
+2. **Quality must produce artifacts.** Before telling the user the work is complete, write `.agents/artifacts/qa-report.md` and `.agents/artifacts/review.md`. If they do not exist, quality has not finished.
+3. **Never declare work done without quality artifacts.** Do not say "done", "complete", "finished", or "ready" unless `qa-report.md` says `PASS` and `review.md` says `APPROVE`.
+4. **Never infer quality from your own output.** Writing code and saying "tests pass" is not a quality review. Quality must run its own verification.
+5. **Never silently skip a workflow step.** The cost of an unnecessary quality review is 2 minutes. The cost of a missed bug is a broken production app.
+
+## Phase 1 — Diagnose (before any code changes)
+
+When the user reports something broken, first establish where the problem actually is: code, configuration, environment, infrastructure, or user error. Never modify code to fix a problem that has not been diagnosed. A system that is not broken can be broken by unnecessary fixes.
+
+## Phase 2 — Classify
+
+Classify the work before starting:
+
+- **Tier 1 (clearly bounded, obvious approach, diagnosis confirms code issue):** Go directly to Phase 3 (Develop).
+- **Tier 2 (probably small, scope unclear):** Ask 1-2 quick questions to bound the work, then Phase 3.
+- **Tier 3 (clearly complex, multi-step):** Plan first — establish goal, users, constraints, smallest useful result, success criteria. Get approval before Phase 3.
+
+## Phase 3 — Develop
+
+Work test-first at three levels:
+1. **Unit tests**: write failing tests for core logic, implement to pass. Cover edge cases.
+2. **Feature tests**: verify each acceptance criterion through observable behavior.
+3. **End-to-end tests**: simulate the real user journey in the actual application.
+
+For a bug fix, write regression tests at each applicable level before the fix. Confirm each fails, fix, confirm each passes.
+
+Respect approved scope. Choose the smallest working solution. Do not add infrastructure, services, or abstractions unless required.
+
+## Phase 4 — Quality (mandatory, never skip)
+
+After development, perform your own quality review:
+
+1. Run all tests at all three levels and record results.
+2. Inspect the diff for correctness, regressions, security, maintainability.
+3. Write `.agents/artifacts/local-test.md` with the simplest test path organized by test level.
+4. Write `.agents/artifacts/qa-report.md` with `PASS`, `FAIL`, `BLOCKED`, or `PASS_WITH_NOTES`.
+5. Write `.agents/artifacts/review.md` with `APPROVE` or `REQUEST CHANGES`.
+
+Do not give `PASS` without running tests. Do not say "done" without writing these artifacts.
+
+## Phase 5 — Report
+
+After quality passes, give the user:
+- Exact local test commands and URL from `local-test.md`
+- Ask: test, fix, adjust, or start the next feature?
+- Do not automatically plan the next feature unless asked.
+
+## Skill loading
+
+For specific work types, load the matching skill rule:
+- UI/styling work: load the `ui-ux` skill
+- Writing tests: load the `unit-testing` skill
+- Deployment: load the `deploy` skill
+- Code review: load the `quality-review` skill
