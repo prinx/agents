@@ -35,7 +35,7 @@ The request is clearly complex, multi-step, or has unknown scope. Full planner w
 
 When unsure which tier, default to tier 2 (quick scope) — it is cheap and prevents wasted work. If the developer starts work and discovers unexpected complexity, escalate back to the planner.
 
-Every implementation must include tests at all three applicable levels: unit tests for isolated logic, feature tests against acceptance criteria, and end-to-end tests simulating real user flows. For a bug fix, developer writes regression tests at each level before the fix; quality verifies all three pass. If a test level is not applicable (for example no UI for a library), quality records the reason explicitly.
+Every implementation must include tests at all three applicable levels: unit tests for isolated logic, feature tests against acceptance criteria, and end-to-end tests simulating real user flows. For a bug fix, developer writes regression tests at each level before the fix; quality runs all three test levels, inspects the diff for correctness/security/scope, classifies findings as blocking or advisory, then verifies all three pass. If a test level is not applicable (for example no UI for a library), quality records the reason explicitly.
 
 Give each subagent a precise artifact-based handoff. On every handoff, identify which skills from `.agents/skills/` match the work and tell the subagent to load them. The user should never need to request a skill explicitly — you route it automatically. Match skills to work signals:
 

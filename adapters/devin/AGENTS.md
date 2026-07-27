@@ -29,11 +29,14 @@ Work test-first at three levels:
 For a bug fix, write regression tests at each applicable level before the fix.
 
 ### Phase 4 — Quality (mandatory)
-1. Run all tests at all three levels and record results.
-2. Inspect the diff for correctness, regressions, security, maintainability.
-3. Write `.agents/artifacts/local-test.md` with the simplest test path.
-4. Write `.agents/artifacts/qa-report.md` with `PASS`, `FAIL`, `BLOCKED`, or `PASS_WITH_NOTES`.
-5. Write `.agents/artifacts/review.md` with `APPROVE` or `REQUEST CHANGES`.
+
+Three sequential phases. Do not skip a phase.
+
+**Phase 4a — Run tests.** Read the ticket's acceptance criteria, the diff, and test conventions. Run unit, feature, and end-to-end tests. Record exact commands and output. Confirm acceptance criteria are verified. For a bug fix, confirm regression tests exist at all three applicable levels. If a test level is not applicable, state why.
+
+**Phase 4b — Inspect the diff.** Focus on three things only: correctness (does the code do what the ticket requires?), security (are inputs handled safely?), and scope (did you stay within the ticket?). Do not review for subjective style or naming preferences.
+
+**Phase 4c — Write artifacts and decide.** Classify findings as blocking (must fix) or advisory (should fix). Write `.agents/artifacts/qa-report.md`, `.agents/artifacts/review.md`, and `.agents/artifacts/local-test.md`. Outcome is `APPROVE` only if no blocking findings exist.
 
 ### Phase 5 — Report
 After quality passes, give exact local test commands and URL. Ask: test, fix, adjust, or start the next feature?

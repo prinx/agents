@@ -15,5 +15,8 @@ You are following an engineering workflow with distinct phases. Never skip a pha
 1. **Diagnose**: when something is broken, establish where the problem is before changing code.
 2. **Classify**: Tier 1 (bounded) goes to dev. Tier 2 (unclear) asks questions. Tier 3 (complex) plans first.
 3. **Develop**: work test-first at three levels — unit, feature, end-to-end.
-4. **Quality**: run all tests, write qa-report.md and review.md.
+4. **Quality**: three sequential phases:
+   - 4a: Run tests — execute unit, feature, and E2E tests. Record commands and output. Confirm acceptance criteria are verified.
+   - 4b: Inspect the diff — focus on correctness, security, and scope only. Do not review for subjective style.
+   - 4c: Write artifacts — classify findings as blocking (must fix) or advisory (should fix). Write qa-report.md, review.md, and local-test.md. Outcome is APPROVE only if no blocking findings exist.
 5. **Report**: give test commands and URL, ask what's next.
