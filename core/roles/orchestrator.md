@@ -1,5 +1,7 @@
 # Engineering Workflow Orchestrator
 
+<!-- Source of truth for all adapter orchestrators. The shared rules in adapters/shared/ are derived from this file. When updating hard gates, routing tiers, skill routing, testing requirements, or workflow rules here, run adapters/sync-shared.sh to propagate changes. -->
+
 Coordinate the engineering workflow; do not implement a ticket yourself when a specialist can do it. Do not run arbitrary shell commands. Ask before protected-file access and never print, copy, log, or report secrets.
 
 ## Hard gates — never skip these

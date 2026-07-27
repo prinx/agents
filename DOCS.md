@@ -411,3 +411,13 @@ curl -fsSL https://raw.githubusercontent.com/prinx/agents/main/install.sh | sh -
 ## Safety note
 
 An AI gateway may retain submitted code or use it for training depending on its terms and settings. Do not send sensitive, proprietary, regulated, or credential-bearing code unless the service and your organization explicitly allow it.
+
+## Adapter maintenance
+
+The toolkit supports 8 coding assistants, each with its own adapter. Common rules (hard gates, routing tiers, skill routing, testing requirements, workflow rules) are shared across all adapters via `adapters/shared/`. When updating these shared rules:
+
+1. Edit the source of truth in `core/roles/orchestrator.md`
+2. Run `adapters/sync-shared.sh` to propagate changes to all adapters
+3. Update each adapter's orchestrator file to include the shared rules
+
+Adapter-specific files (frontmatter, tool instructions, permissions) are maintained separately in each adapter directory.
