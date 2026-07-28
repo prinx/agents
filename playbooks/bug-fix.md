@@ -2,6 +2,8 @@
 
 **Hard gates — never skip:** Developer always hands off to quality. Quality must produce `qa-report.md` and `review.md`. Never declare work done without these artifacts. Never skip quality because the bug seems small.
 
+**Git is required.** Before any work, check whether the project is a Git repository. If not, run `git init -b main` automatically.
+
 1. Orchestrator receives the bug report. Before routing any code changes, diagnose where the problem actually is.
 2. **Diagnose first**: check environment (is the server running, is Docker up, is the database connected), check configuration (are environment variables set, is the config valid), check for user error (is the user doing the right thing). Only after confirming the problem is in the code should code changes begin. If the problem is not in the code, state the actual cause and how to fix it without code changes.
 3. Once the diagnosis confirms a code issue, orchestrator determines whether the bug is small and bounded.
