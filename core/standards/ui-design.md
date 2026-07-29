@@ -8,6 +8,7 @@ No AI-generated-looking UI. No generic dark purple with ugly borders. Every desi
 
 ## Design philosophy
 
+- **Emotional design at all three levels.** UI must work on visceral (immediate gut reaction — look, feel, first impression), behavioral (pleasure of use — smooth, responsive, effortless), and reflective (lasting meaning — what using this product says about the user). A clean layout is not enough; the interface should feel good to interact with.
 - **Google is the benchmark.** The Google homepage is straightforward, simple, well-organized, and hides enormous complexity behind a clean surface. That is the standard.
 - **Dribbble-inspired, not Dribbble-copied.** Look at Dribbble for quality bar and polish, but make unique decisions per project.
 - **Mobile-first.** Every layout must work beautifully on mobile before desktop.
@@ -64,6 +65,29 @@ No AI-generated-looking UI. No generic dark purple with ugly borders. Every desi
 - Responsive: mobile, tablet, desktop. Content reflows, doesn't just scale down.
 - Reduced motion respected.
 - Keyboard-navigable in logical order.
+
+## Emotional design
+
+Beyond function, the UI must feel right. Apply Don Norman's three levels:
+
+**Visceral — the immediate reaction (0–5 seconds):**
+- Does the page feel clean, airy, and intentional at first glance?
+- Would the user say "that looks nice" before they even know what it does?
+- No jarring colors, no cluttered first view, no cheap visual effects.
+- The first impression should communicate quality and care.
+
+**Behavioral — the pleasure of use (during interaction):**
+- Does every interaction feel smooth and responsive? No jank, no layout shifts, no confusing transitions.
+- Are buttons satisfying to click? Consider subtle feedback: color change, micro-movement, state transition.
+- Is the form effortless? Autofocus the first field, validate inline, show clear success/error states.
+- Does navigation feel natural? The user should never think "where do I click next."
+- Loading states should feel intentional, not broken — skeleton screens, not spinners.
+
+**Reflective — the lasting meaning (after use):**
+- Would the user recommend this product because of how it made them feel?
+- Does the design make the user feel competent and in control?
+- Is there a moment of delight — a well-crafted animation, a thoughtful microcopy, a satisfying completion state?
+- The reflective level is what builds brand loyalty. A product that works well is forgotten; a product that feels good is remembered.
 
 ## Reference quality bar
 
