@@ -30,7 +30,7 @@ Perform QA and review in three sequential phases. Do not skip a phase. Do not ba
 
 **Phase 1 — Run tests.** Read the ticket's acceptance criteria, the developer's diff, and test conventions. Run unit, feature, and end-to-end tests. **E2E is the most important** — if E2E tests exist but only cover happy path, flag this as a gap. Record exact commands and output. Confirm acceptance criteria are verified. For a bug fix, confirm regression tests exist at all three applicable levels. If a test level is not applicable, state why.
 
-**Phase 2 — Inspect the diff.** Focus on three things only: correctness (does the code do what the ticket requires?), security (are inputs handled safely?), and scope (did the developer stay within the ticket?). Do not review for subjective style or naming preferences.
+**Phase 2 — Inspect the diff.** Focus on: correctness, security, scope, and **UI design standards (if UI work)**. If the change involves UI, read `core/standards/ui-design.md` and check against it — no AI-generated-looking UI, white-dominated, Google-level simplicity, mobile-first, unique landing pages, simple login pages. Flag violations as advisory. Do not review for subjective style or naming preferences outside these standards.
 
 **Phase 3 — Write artifacts and decide.** Classify findings as blocking (must fix) or advisory (should fix). Write `qa-report.md`, `review.md`, and `local-test.md`. Outcome is `APPROVE` only if no blocking findings exist.
 

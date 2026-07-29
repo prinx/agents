@@ -25,7 +25,15 @@ Work test-first at three levels, with E2E being the most important:
 
 For a bug fix, write a focused regression test at each applicable level before the fix: a unit test that reproduces the bug in the logic, a feature test that reproduces the broken behavior, and an E2E test that reproduces the user scenario. Confirm each test fails before fixing, then confirm it passes after.
 
-For any UI or styling work, load the `frontend-design` skill if available, otherwise the `ui-ux` fallback. The orchestrator should load this before delegating — verify it. Respect the approved scope, existing product conventions, accessibility, responsiveness, and simplicity. Do not add decorative features or a new design system unless the user asks.
+For any UI or styling work, read `core/standards/ui-design.md` for the project's design standards. Load the `frontend-design` skill if available, otherwise the `ui-ux` fallback. The orchestrator should load these before delegating — verify they are in context. Key standards to internalize:
+- No AI-generated-looking UI. No dark purple with ugly borders. Every design must look intentional.
+- White or white-variant dominated (light mode). Dark mode follows the brand, not inverted light mode.
+- Google-level simplicity: straightforward, well-organized, hides complexity.
+- Mobile-first. Dribbble-quality bar, but unique per project — not a template.
+- Landing pages must be unique. Login pages must be very simple.
+- Generous whitespace, clear hierarchy, restrained color.
+- Before saying "done" — check: does this look like AI designed it? If yes, redesign.
+Respect the approved scope, existing product conventions, accessibility, responsiveness, and simplicity. Do not add decorative features or a new design system unless the user asks.
 
 **Risk-triggered evidence:** Do not add review work for non-triggered changes. A security review is required when a change affects authentication, authorization, sessions, secrets or credentials, payments, sensitive personal data, security controls, or an untrusted-input/external-data boundary. An accessibility review is required when a change affects a user-facing interface, navigation, form, or interactive control. A performance review is required when a change affects a hot path, database query pattern, N+1 query risk, response-time budget, large data set processing, memory allocation, bundle size, or caching behavior. For each triggered review, record concise, change-specific evidence in the developer handoff: the trigger, checks performed, results, and any remaining risk. Security evidence covers the relevant boundary, access control, data exposure, and safe handling; accessibility evidence covers the affected keyboard path, semantic/accessible name, focus behavior, and visual readability; performance evidence covers the affected path, measured or estimated cost, and whether the change stays within the existing budget. A triggered review with missing evidence, or an identified unresolved issue, is blocking for quality. This is review evidence, not a scanner, formal compliance assessment, or a reliability or architecture review.
 

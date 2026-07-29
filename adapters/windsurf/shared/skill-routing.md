@@ -1,7 +1,7 @@
 **Skill loading is a hard gate.** Before every subagent handoff, use the Skill tool to explicitly load every matching skill yourself. Do not just tell the subagent which to load — load them and verify they are available. If a required skill cannot be loaded, state which skill is missing and do not proceed until it is resolved.
 
 **Three pillars — check these first, they are the most important:**
-1. **`frontend-design`** — ANY UI/styling work. Agents produce templated, default-looking UI without this. Fallback to `ui-ux` if unavailable.
+1. **`frontend-design`** — ANY UI/styling work. Agents produce templated, default-looking UI without this. Fallback to `ui-ux` if unavailable. **Always also read `core/standards/ui-design.md`** and include it in the developer handoff — this ensures the project's specific design taste (domain-inspired fonts, no boring centered hero, white-dominated, etc.) is enforced regardless of which design skill is loaded.
 2. **`e2e-testing`** — ANY feature with a user-facing flow. Agents only test happy path without this — E2E must include error states and edge cases.
 3. **`quality-review`** — EVERY quality handoff. Agents never self-catch their own gaps.
 
