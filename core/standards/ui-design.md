@@ -30,7 +30,8 @@ No AI-generated-looking UI. No generic dark purple with ugly borders. Every desi
 - Borders: subtle when present. 1px, light gray (#E0E0E0) or transparent. No thick dark borders.
 
 ### Typography
-- System fonts or carefully chosen web fonts. No default-stack feel.
+- **Fonts must be inspired by the target domain of the app.** Research the domain's visual language — if it's a music app, look at what musical scores use; if it's architecture, look at blueprint lettering; if it's finance, look at financial documents. Derive font choices from that research.
+- No default "safe" system fonts (Inter, SF Pro, etc.) unless the domain genuinely calls for them.
 - Type scale should be deliberate and limited (3-4 sizes max).
 - Body text: readable size (16px minimum), comfortable line-height (1.5+).
 - Headings: clear hierarchy, appropriate weight. No forced bold everywhere.
@@ -38,7 +39,8 @@ No AI-generated-looking UI. No generic dark purple with ugly borders. Every desi
 
 ### Landing pages
 - Must be unique. Not a template. Not a pattern you've seen before.
-- The hero should be distinctive — not just a headline + CTA + mockup.
+- **No centered headline + subtitle + CTA + mockup.** That is the generic pattern agents always produce. Be creative and innovative with layout: asymmetric, split-screen, staggered, grid-breaking, narrative-driven, interactive, or whatever the subject dictates.
+- The hero should be the most characteristic thing in the subject's world — an interactive element, a live demo, a data visualization, a kinetic typography moment, a product demo embedded in the page. Let the subject dictate the form.
 - Structure tells a story. Each section should have a reason to exist.
 - No stock UI patterns (no "01/02/03" numbered steps unless the content is truly sequential).
 
