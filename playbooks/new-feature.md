@@ -2,6 +2,8 @@
 
 **Hard gates — never skip:** Developer always hands off to quality. Quality must produce `qa-report.md` and `review.md`. Never declare work done without these artifacts.
 
+**Git is required.** Before any work, check whether the project is a Git repository. If not, run `git init -b main` automatically.
+
 1. Orchestrator records `prototype-first` delivery unless the human explicitly requests guided/checkpointed or autonomous delivery.
 2. Planner asks only the short questions needed to establish goal, users, constraints, smallest useful first result, and success criteria. Planner includes a test strategy in `plan.md`: which test levels apply (unit, feature, end-to-end), what each covers, and how the developer will verify them.
 3. Planner creates proposed first-feature requirements, a simple stack, lightweight plan, small backlog, and optional short future-ideas list. The human explicitly approves this first-feature plan.

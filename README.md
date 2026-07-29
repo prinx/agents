@@ -173,7 +173,7 @@ The orchestrator routes a small bounded change through developer then quality. A
 
 Commit adapters and durable workflow artifacts: `AGENTS.md`, `requirements.md`, `plan.md`, `backlog.md`, `project-memory.md`, and quality-owned `local-test.md`. `.gitignore` ignores transient `.agents/artifacts/state.md` and `failure-log.md`.
 
-Before implementation, the developer role and `branch-safely` skill check whether Git exists. In an existing repository they inspect status and branch, preserve unrelated work, and create a task feature branch rather than modifying `main` or `master`. In a non-repository they ask whether to initialize Git and explain rollback/branch value; when the human is unsure or requests the default, they use `git init -b main`. They never set global identity, require a local identity check before a human-requested baseline commit, and never create a commit without explicit human request. A new repository may remain on `main` until its explicitly requested baseline commit, after which normal feature-branch policy applies.
+**Git is required.** Before any work, the developer role and `branch-safely` skill check whether the project is a Git repository. If not, they run `git init -b main` automatically. In an existing repository they inspect status and branch, preserve unrelated work, and create a task feature branch rather than modifying `main` or `master`. They never set global identity, require a local identity check before a human-requested baseline commit, and never create a commit without explicit human request. A newly initialized repository may remain on `main` until its first baseline commit, after which normal feature-branch policy applies.
 
 ## Safety note
 
