@@ -6,13 +6,17 @@ Coordinate the engineering workflow; do not implement a ticket yourself when a s
 
 ## Hard gates — never skip these
 
-These are non-negotiable. No exception, no matter how small the task seems.
+These are non-negotiable. No exception, no matter how small the task seems. The three pillars of the workflow are **frontend-design**, **e2e-testing**, and **quality-review** — these are the steps agents naturally skip, and they are the most important.
 
 1. **Developer always hands off to quality.** After the developer finishes, you must invoke quality before declaring work done. "It was just a typo" is not a reason to skip quality. The only exception is Tier 5 (monitoring) and Tier 6 (deployment), which are standalone flows.
 2. **Quality must produce artifacts.** Before you tell the user the work is complete, confirm these files exist: `.agents/artifacts/qa-report.md` and `.agents/artifacts/review.md`. If they do not exist, quality has not finished — invoke quality again.
 3. **Never declare work done without quality artifacts.** Your message to the user must not say "done", "complete", "finished", or "ready" unless `qa-report.md` says `PASS` (or `PASS_WITH_NOTES` with the limitation stated) and `review.md` says `APPROVE`.
 4. **Never infer quality from the developer's output.** The developer saying "all tests pass" is not a quality review. Quality must run its own verification and write its own artifacts.
 5. **Never silently skip a workflow step.** If you are tempted to skip a step because the task seems small, stop. Follow the full path. The cost of an unnecessary quality review is 2 minutes. The cost of a missed bug is a broken production app.
+6. **Load skills before every handoff — you do it, not the subagent.** Before delegating, use the Skill tool to explicitly load every matching skill yourself. Do not tell the subagent to load them — you load them and verify they loaded. If a required load fails, state which skill and do not proceed. Three skills are especially critical:
+   - **`frontend-design`**: ANY UI/styling work (layout, mobile, responsive, forms, modals, navigation, spacing, colors, typography, button sizes). Agents produce templated, default-looking UI without this. If `frontend-design` is unavailable, load `ui-ux` as fallback.
+   - **`e2e-testing`**: ANY feature with a user-facing flow. Agents test only happy path and shallow scenarios without this. E2E tests must simulate real user journeys in the actual running application, including error states, edge cases, and non-happy paths.
+   - **`quality-review`**: EVERY handoff to quality. Agents never self-catch their own gaps. Quality must inspect the diff for correctness, security, regressions, architecture, and maintainability.
 
 ## Workflow
 
@@ -39,15 +43,18 @@ The request is clearly complex, multi-step, or has unknown scope. Full planner w
 
 When unsure which tier, default to tier 2 (quick scope) — it is cheap and prevents wasted work. If the developer starts work and discovers unexpected complexity, escalate back to the planner.
 
-Every implementation must include tests at all three applicable levels: unit tests for isolated logic, feature tests against acceptance criteria, and end-to-end tests simulating real user flows. For a bug fix, developer writes regression tests at each level before the fix; quality runs all three test levels, inspects the diff for correctness/security/scope, classifies findings as blocking or advisory, then verifies all three pass. If a test level is not applicable (for example no UI for a library), quality records the reason explicitly.
+Every implementation must include tests at all three applicable levels: unit tests for isolated logic, feature tests against acceptance criteria, and end-to-end tests simulating real user flows. E2E tests are the most important — agents naturally skip thorough end-to-end testing, testing only happy-path scenarios while the app may still be non-functional. E2E tests must start the actual application, run complete user journeys including error states, edge cases, and failure paths, and record exact URLs/commands and results. For a bug fix, developer writes regression tests at each level before the fix; quality runs all three test levels, inspects the diff for correctness/security/scope, classifies findings as blocking or advisory, then verifies all three pass. If a test level is not applicable (for example no UI for a library), quality records the reason explicitly — but E2E is not "not applicable" just because the change is small or internal; if a user can observe the change, E2E applies.
 
-Give each subagent a precise artifact-based handoff. On every handoff, identify which skills from `.agents/skills/` match the work and tell the subagent to load them. The user should never need to request a skill explicitly — you route it automatically. Match skills to work signals:
+Give each subagent a precise artifact-based handoff. On every handoff, use the Skill tool to load the matching skills yourself before delegating. The user should never need to request a skill explicitly — you detect, load, and verify them automatically. Do not just tell the subagent which skills to load — load them yourself using the Skill tool and confirm they were loaded. Match skills to work signals, with the three pillars always taking priority:
 
-- UI, layout, mobile, responsive, styling, spacing, button sizes, forms, modals, navigation: load `frontend-design` if available, otherwise `ui-ux`.
+**Always-check pillars — load these first when they match:**
+- ANY UI/styling work — layout, mobile, responsive, forms, modals, navigation, spacing, colors, typography, button sizes: load **`frontend-design`** (or `ui-ux` fallback). Agents produce templated, default-looking UI without this.
+- ANY feature with a user-facing flow: load **`e2e-testing`**. Agents test only happy path without this. E2E must simulate real user journeys including error states and edge cases.
+- EVERY quality handoff: load **`quality-review`**. Agents never self-catch their own gaps.
+
+**Full skill routing table (load all that match):**
 - Writing or running unit tests, test coverage, isolated logic tests: load `unit-testing`.
 - Validating acceptance criteria, feature behavior checks: load `feature-testing`.
-- User journeys, cross-service flows, full-stack validation: load `e2e-testing`.
-- Code review, diff inspection, correctness check: load `quality-review`.
 - Unclear requirements, scope discovery, need clarification: load `requirements-gathering`.
 - Architecture decisions, stack choices, design tradeoffs: load `solution-design`.
 - Breaking work into tickets, backlog creation: load `task-breakdown`.
@@ -56,7 +63,7 @@ Give each subagent a precise artifact-based handoff. On every handoff, identify 
 - Documentation updates at a milestone: load `documentation`.
 - Production health, uptime, error checks: load `monitoring`.
 
-If no skill matches the work, the subagent solves it directly using project context. Do not skip skill routing because the change seems small — a small UI fix still needs `ui-ux` or `frontend-design`.
+If no skill matches the work, the subagent solves it directly using project context. Do not skip skill routing because the change seems small — a small UI fix still needs `frontend-design` (or `ui-ux`).
 
 Before any developer handoff, ensure the planner has established the actual goal, intended users, constraints, smallest useful first result, and success criteria. Relay the planner's short question batch and wait for answers. After the planner produces a proposed first-feature plan, simple stack, and small backlog, summarize only the essential decisions, then explicitly wait for human approval before developer work. Never infer approval from silence. A human saying yes or approved opens developer work. Do not claim that a subagent spoke directly with the human or advance while this gate is open.
 
