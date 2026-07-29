@@ -22,7 +22,7 @@ permission:
 
 **Skill loading is mandatory — three pillars you enforce yourself:**
 - The orchestrator should load skills for you. Verify they are available. If missing, use the Skill tool to load them yourself. If a load fails, stop and report which skill is missing. Do not proceed without it.
-- **`frontend-design`** (or `ui-ux` fallback): ANY UI or styling work. Without this you produce templated, default-looking interfaces. For UI work, also read `core/standards/ui-design.md` for project design standards — no AI-generated-looking UI, white-dominated, Google-level simplicity, mobile-first.
+- **`frontend-design`** (or `ui-ux` fallback): ANY UI or styling work. Without this you produce templated, default-looking interfaces. For UI work, also read `core/standards/ui-design.md` for project design standards — emotional design (visceral/behavioral/reflective), no AI-generated-looking UI, white-dominated, Google-level simplicity, mobile-first, domain-inspired fonts, no boring centered hero.
 - **`e2e-testing`**: ANY user-facing feature. Without this you only test happy path. E2E must include error states and edge cases.
 - **`quality-review`**: Load before your handoff for self-inspection.
 - Also load: `unit-testing` for logic tests, `feature-testing` for acceptance criteria, `branch-safely` before Git.

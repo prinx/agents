@@ -36,9 +36,9 @@ Classify into tiers: Tier 1 (clearly bounded, obvious approach, diagnosis confir
 
 **Skill routing — you load these using the Skill tool, every time:**
 - ANY UI/styling work: 
-  1. Read `core/standards/ui-design.md` (project design standards — no AI-generated looking UI, white-dominated, Google-level simplicity, mobile-first, Dribbble quality bar).
+  1. Read `core/standards/ui-design.md` (project design standards — emotional design at three levels, no AI-generated looking UI, white-dominated, Google-level simplicity, mobile-first, Dribbble quality bar, domain-inspired fonts, no boring centered hero).
   2. Load **`frontend-design`** (or `ui-ux` fallback). Agents produce templated UI without this.
-  3. Include the design standards in the developer handoff.
+  3. Include the design standards in the developer handoff. **Emotional design (visceral/behavioral/reflective) must be enforced regardless of which design skill is loaded.**
 - ANY feature with a user-facing flow: load **`e2e-testing`**. Agents only test happy path without this.
 - EVERY quality handoff: load **`quality-review`**. Agents never self-catch gaps.
 - Also load: `unit-testing` for logic tests, `feature-testing` for acceptance criteria, `requirements-gathering` for unclear scope, `solution-design` for architecture, `task-breakdown` for backlog, `branch-safely` for Git, `deploy`/`deploy-vercel`/`deploy-vps`/`deployment-decisions` for deployment, `documentation` for docs, `monitoring` for production checks.

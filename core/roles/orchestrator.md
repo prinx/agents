@@ -49,9 +49,9 @@ Give each subagent a precise artifact-based handoff. On every handoff, use the S
 
 **Always-check pillars — load these first when they match:**
 - ANY UI/styling work — layout, mobile, responsive, forms, modals, navigation, spacing, colors, typography, button sizes: 
-  1. Read `core/standards/ui-design.md` (project design standards — no AI-generated looking UI, white-dominated, Google-level simplicity, mobile-first, Dribbble-quality bar).
+  1. Read `core/standards/ui-design.md` (project design standards — emotional design at three levels, no AI-generated looking UI, white-dominated, Google-level simplicity, mobile-first, Dribbble-quality bar, domain-inspired fonts, no boring centered hero).
   2. Load **`frontend-design`** (or `ui-ux` fallback). Agents produce templated, default-looking UI without this.
-  3. Include the design standards in the developer handoff.
+  3. Include the design standards in the developer handoff. **Emotional design (visceral/behavioral/reflective) must be enforced regardless of which design skill is loaded.**
 - ANY feature with a user-facing flow: load **`e2e-testing`**. Agents test only happy path without this. E2E must simulate real user journeys including error states and edge cases.
 - EVERY quality handoff: load **`quality-review`**. Agents never self-catch their own gaps.
 
