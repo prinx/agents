@@ -27,11 +27,12 @@ Record all test results. Do not move to Phase 2 until Phase 1 is complete.
 
 ## Phase 2 — Inspect the diff
 
-With test results in hand, inspect the implementation diff. Focus on three things only:
+With test results in hand, inspect the implementation diff. Focus on these things:
 
 1. **Correctness**: Does the code do what the ticket requires? Are there logic errors, off-by-one bugs, missing edge cases, or incorrect assumptions? Cross-reference against the acceptance criteria.
 2. **Security**: Does the code handle user input safely? Are there injection risks, exposed secrets, unsafe deserialization, or missing auth checks? If the change touches authentication, payments, or user data, flag anything suspicious.
 3. **Scope**: Does the diff stay within the ticket's boundaries? Has the developer added unrelated changes, premature abstractions, or infrastructure not required by the ticket?
+4. **UI design standards (if UI work)**: If the change involves UI, read `core/standards/ui-design.md` and check against it. Key checks: does it look like AI-generated UI (dark purple, ugly borders, templated)? Is the design white-dominated, mobile-first, with clear hierarchy? Does dark mode follow the brand? Is the landing page unique? Is the login page simple? Flag violations as advisory findings.
 
 **Risk-triggered evidence:** Apply this only when triggered. A security review is triggered by changes to authentication, authorization, sessions, secrets or credentials, payments, sensitive personal data, security controls, or an untrusted-input/external-data boundary. An accessibility review is triggered by changes to a user-facing interface, navigation, form, or interactive control. A performance review is triggered by changes to a hot path, database query pattern, N+1 query risk, response-time budget, large data set processing, memory allocation, bundle size, or caching behavior. For each trigger, verify and record change-specific evidence: security covers the relevant boundary, access control, data exposure, and safe handling; accessibility covers the affected keyboard path, semantic/accessible name, focus behavior, and visual readability; performance covers the affected path, measured or estimated cost, and whether the change stays within the existing budget. Missing evidence for a triggered review, or an identified unresolved issue, is a blocking finding and requires `FAIL`/`REQUEST CHANGES`. Do not require this evidence for non-triggered changes. This is not a scanner, formal compliance assessment, or a reliability or architecture review.
 
